@@ -4,8 +4,10 @@ from Image_control import image_control
 from Image_control import Image_histogram
 from Patient_Level_Data_Splitting import patient_Table
 import pandas as pd
+import torch
 from test_train_split import test_train_split
 from test_train_split import spliting_patient_id_and_images
+from dinov2_base import DINOv2Base
 
 # Creating the main Path where rthe data is stored
 main_path = 'C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Pre_processed' # if you want to run the code on your PC, you need to set the path for your local 
@@ -31,5 +33,21 @@ patient_id_Diagnosis = patient_Table(meta_data_frame)
 
 X_train, X_test, y_train, y_test, X_val,y_val = test_train_split(patient_id_Diagnosis)
 
-X_train_images, X_test_images, y_train_images, y_test_images, X_val_images,y_val_images = spliting_patient_id_and_images(meta_data_frame,X_train, X_test, y_train, y_test, X_val,y_val)
+y_train,y_test,y_val = spliting_patient_id_and_images(meta_data_frame, X_train, X_test, X_val)
 
+print(len(X_train))
+print(len(X_val))
+print(len(X_test))
+
+print(set(X_train) & set(X_val))
+print(set(X_train) & set(X_test))
+print(set(X_val) & set(X_test))
+'''
+model = DINOv2Base() 
+
+x = torch.load(X_test_images)
+
+# Feature extraction
+features = model(x)
+print(features)
+'''

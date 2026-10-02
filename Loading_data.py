@@ -1,8 +1,4 @@
-import pathlib 
 import os
-
-
-
 
 Data_folder = ['AD', 'CN', 'EMCI', 'LMCI', 'MCI', 'SMC']
 
@@ -29,7 +25,7 @@ def read_folders(main_path):
                     "diagnosis": diagnosis,
                     "patient_id": patient_id,
                     "filename": file
-                })
+                })         
     return image_data
 
 
