@@ -1,7 +1,9 @@
 import pandas as pd
 
 def patient_Table(dataFrame):
-    id = dataFrame['patient_id','diagnosis']
-    id = id.unique()
-    Patient_table = dataFrame[id]
-    return Patient_table
+    id_Diag = dataFrame[['patient_id','diagnosis']]
+    print(id_Diag.head())
+    id_set = set()
+    for id in id_Diag['patient_id']:
+        id_set.add(id)
+    print(id_set)

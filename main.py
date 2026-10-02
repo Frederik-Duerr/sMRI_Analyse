@@ -23,5 +23,4 @@ meta_data_frame = image_control(meta_data_frame)
 # print(meta_data_frame['diagnosis'].value_counts(normalize=True)*100) # Balanced Data all 16%
 # print(meta_data_frame.duplicated().sum()) # Zero Duplicates
 
-splitted_Data = patient_Table(meta_data_frame)
-print(splitted_Data.sample(10))
+patient_Table(meta_data_frame)
