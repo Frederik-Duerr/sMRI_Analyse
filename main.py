@@ -5,6 +5,8 @@ from Image_control import Image_histogram
 from Patient_Level_Data_Splitting import patient_Table
 import pandas as pd
 from test_train_split import test_train_split
+from test_train_split import spliting_patient_id_and_images
+
 # Creating the main Path where rthe data is stored
 main_path = 'C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Pre_processed' # if you want to run the code on your PC, you need to set the path for your local 
 # Reading in the folders of the Data
@@ -25,7 +27,9 @@ meta_data_frame = image_control(meta_data_frame)
 # print(meta_data_frame.duplicated().sum()) # Zero Duplicates
 
 patient_id_Diagnosis = patient_Table(meta_data_frame)
-print(len(patient_id_Diagnosis))
+print(patient_id_Diagnosis.columns)
 
-X_train, X_test, y_train, y_test = test_train_split(patient_id_Diagnosis)
-print(X_train)
+X_train, X_test, y_train, y_test, X_val,y_val = test_train_split(patient_id_Diagnosis)
+
+# X_train, X_test, y_train, y_test, X_val,y_val = spliting_patient_id_and_images(meta_data_frame,X_train, X_test, y_train, y_test, X_val,y_val)
+spliting_patient_id_and_images(meta_data_frame=meta_data_frame,X_train, X_test, y_train, y_test, X_val,y_val)
