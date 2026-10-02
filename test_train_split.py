@@ -22,7 +22,12 @@ def test_train_split(id_diag):
     return X_train, X_test, y_train, y_test, X_val,y_val
 
 
-
+# Gathering all the images belonging to the patioent id´s of each set.
 def spliting_patient_id_and_images(meta_data_frame,X_train, X_test, y_train, y_test, X_val,y_val):
-    X_train = meta_data_frame[meta_data_frame[X_train],'image_path']
-    print(X_train)
+    X_train['image_path'] = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_train),'image_path']    
+    X_test['image_path'] = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_test),'image_path'] 
+    y_train['image_path'] = meta_data_frame.loc[meta_data_frame['patient_id'].isin(y_train),'image_path'] 
+    y_test['image_path'] = meta_data_frame.loc[meta_data_frame['patient_id'].isin(y_test),'image_path'] 
+    X_val['image_path'] = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_val),'image_path'] 
+    y_val['image_path'] = meta_data_frame.loc[meta_data_frame['patient_id'].isin(y_val),'image_path'] 
+    return X_train, X_test, y_train, y_test, X_val,y_val

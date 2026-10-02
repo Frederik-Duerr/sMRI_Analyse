@@ -27,9 +27,9 @@ meta_data_frame = image_control(meta_data_frame)
 # print(meta_data_frame.duplicated().sum()) # Zero Duplicates
 
 patient_id_Diagnosis = patient_Table(meta_data_frame)
-print(patient_id_Diagnosis.columns)
+# print(patient_id_Diagnosis.columns)
 
 X_train, X_test, y_train, y_test, X_val,y_val = test_train_split(patient_id_Diagnosis)
 
-# X_train, X_test, y_train, y_test, X_val,y_val = spliting_patient_id_and_images(meta_data_frame,X_train, X_test, y_train, y_test, X_val,y_val)
-spliting_patient_id_and_images(meta_data_frame=meta_data_frame,X_train, X_test, y_train, y_test, X_val,y_val)
+X_train_images, X_test_images, y_train_images, y_test_images, X_val_images,y_val_images = spliting_patient_id_and_images(meta_data_frame,X_train, X_test, y_train, y_test, X_val,y_val)
+
