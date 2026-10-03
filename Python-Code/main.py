@@ -1,5 +1,5 @@
 from Loading_data import read_folders, sclicing_image_features
-from label import label_change
+from lable import label_change
 from Image_control import image_control
 from Image_control import Image_histogram
 from Patient_Level_Data_Splitting import patient_Table
