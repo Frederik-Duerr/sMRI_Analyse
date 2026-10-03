@@ -1,0 +1,66 @@
+% ============================================================================
+% CHAPTER 2 — MATERIALS AND METHODS
+% ============================================================================
+\chapter{Materials and Methods}
+\label{chap:methods}
+
+\section{Dataset}
+\label{sec:dataset}
+
+\placeholder{Describe the dataset, inclusion/exclusion criteria, sample size,
+acquisition protocol, preprocessing, and relevant ethics/data-governance aspects.}
+
+\section{Image Preprocessing}
+\label{sec:preprocessing}
+\placeholder{This part we can reference to the paper they have published in the beginning of this year}
+Image processing is a highly relevant procedure for deploying statistical pipelines. One of the methods of preprocessing in MRI images is the bias field correction. The bias fieldis a 
+low-frequency spatially variying MRI artifact resulting from spatial inhomogeneity of the magnetic field, variations in the sensetivity of the reception coil, and the interacion between the magnetic field and the human body.
+The bias fiels is dependent on the strength of the maganetoc filed. By increasing the magnetic field, which increases the spatial resolution also increases the bias field, resulting in a higher Signal to nois ration. 
+\\
+another important pre-processing method is the brain exctraction, skull-stripping. Image contrast from nonbrain tissue such as fat, skull, or neck can cuse issues with downstream
+analysis starting with the brain tissue segmentation. 
+The brain extraction generates a mask that identifies brain voxels comprising gray-matter, white-matter, and Cerebrospinal fluid (CSF) of the cerebral corte and subcortical structures, 
+including the brain stemm and the cerebellum.
+\textbf{Temporal Signal-to-Noise Ratio:} Signal to nois ration is evaluated by the mean signal intesity in eahc voxel devided by the standarddiviation
+of the signal across time points.
+\textbf{Spatial Normalisation:} 
+
+\textbf{Image Registration:} A process that aligns an image from one coordinate space to another. E.g. images taken on different days or locations.
+Differneces can appear due to different spatioal resolutions and fied of view. 
+\textbf{Segmentation and Parcellation:} 
+Brain tissues are divided into:\\
+\begin{enumerate}
+    \item gray matter (GM), containing neuronal cell bodies
+    \item white matter (WM), including neuron connection fibres wrapped in a special signal-acceleration substance called myelin. 
+    \item Cerebrospinal fluid (CSF), a protecting fluid mostly around the brain bit also within the brain cavities called ventricles.
+    \item 
+\end{enumerate}
+
+
+
+
+\placeholder{Describe registration, skull stripping, normalization, segmentation,
+resampling, denoising, bias-field correction, or other preprocessing steps as applicable.}
+
+\section{Feature Extraction}
+\label{sec:features}
+
+\placeholder{Describe the features, extraction method, software, and parameters.}
+
+\section{Machine Learning / Deep Learning}
+\label{sec:models}
+
+\placeholder{Describe model architecture, train/validation/test split, preprocessing,
+class balancing, hyperparameter selection, training procedure, and reproducibility.}
+
+\section{Statistical Analysis}
+\label{sec:statistics}
+
+\placeholder{Describe statistical tests, assumptions, confidence intervals, effect sizes,
+and significance thresholds.}
+
+\section{Software and Reproducibility}
+\label{sec:software}
+
+The analysis was implemented in Python. Record the relevant package versions and the
+operating environment here.

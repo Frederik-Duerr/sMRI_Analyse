@@ -1,0 +1,85 @@
+% ============================================================================
+% CHAPTER 1 — INTRODUCTION
+% ============================================================================
+\chapter{Introduction}
+\label{chap:introduction}
+
+\section{Clinical Context of Alzheimers disease}
+\label{Clinical Context of Alzheimers disease}
+"The slow onset, subtle symptoms, and gradual cognitive decline characteristic of Alzheimer’s disease (AD) make it one of the most challenging
+neurodegenerative conditions to detect early, which hinders swift and
+accurate diagnosis.1 AD is one of the leading causes of dementia in the
+United Kingdom and many other countries worldwide" \cite{Early_detection_deep_learning}.
+Alzheimers disease is the main tye of dementia, which is characterised by memory loss, behavior changes and cognitive issues.
+The onset of the diseas begins normally years before the fist symptoms are visible, which increases the necesseraty to finde a methode
+for early detection, followed intervention.
+
+Labels of interst in the context of Alzheimer's Disease. 
+
+\subsection{Diagnosing Alzheimers Disease}
+\label{Diagnosing Alzheimers Disease}
+Atrophy due to gray matter loss with anatomical magnetic resonance imaging or hypometabolism with 18F-fluorodeoxyglucose positron emission tomography (FDG PET). 
+
+This diagnostic status is established by clinicians based on cognitive scores such as the Mini-Mental State Evaluation (MMSE),
+and the Clinical Dementia Rating. Even though assessment protocols are standardized, these scores can be highly variable based on the examiner and the physical/psychological condition of the patient during the test.
+\section{Foundation Models}
+\label{Foundation Models}
+
+\section{Structural MRI acquisition}
+\label{sec: Structural MRI acqusition}
+\textbf{Image Acqusition:}
+A strong magentic fiel is applied B0, normally 1,5-3T. That forces the hydrogen nuclei of the abundant water molecuels in the soft tissue in the ody to aling with the magentic field. 
+A gradient coli applies a second magentic field, which leasde to a different spinning frequency of molecules in the filed of interest. A radio-frequency (RF) impules is applied with the same 
+frequency as the gradient coil made the molecules spin. This pulse which tilts these nuclei from their aligment along the B0. The nuclei then precess back to the aligment. The 
+preceding nuclei emit a signal, which is registered by the reciver coils in the scanner. 
+Each signal that is produced by the realignment of the hydrogen nuclei to the magnetic field B0 has two components. First the longitudinal z-axis, which is along the scanner's magentic field. 
+The second is the transversal signal. This describes the xy-plane orthogonal to the scanner´s magnetic field.
+\\
+
+Initially the longitudinal signal is weak, due to the tilt of the nuclei. But over time it increases again due to the realignment of the hydrogen nuclei. The time constant 
+that dictates the speed of realignment is denoted by T1. The transversal signal on the other hand is strog due to phase coherence. The signal decades as the nuclei dephase and realigne. 
+This decay is denoted as the T2 time constant.\\
+
+Tissues have different T1 and T2 relaxations times, which are used to build contrast in the MRI image. In the final image the contrast depends on the receiving time of an signal, 
+the echo time (TE) and how fast you repeat the tilt-relax-process, repetition-time (TR).
+
+
+
+
+
+\section{MRI properties for analysis}
+\label{sec: MRI propperties for analysis}
+Magnetic resonance Imaging (MRI) is a widely used imaging modality in radiology.
+Even though MR has a long data acquisition time, and complex scanning protocols, it is preferred more than other imaging modalities such as Completed Tomography (CT)
+because it lacks the use of ionizing radiation and has a better visualization potential. 
+
+\subsection{MRI in diagnosing Alzheimer's disease}
+\label{sec:MRI in diagnosing Alzheimers disease}
+Alzheimer's is a complex little researched neurodegenerative disease, which can not be diagnosed within a single test. However, brain imaging plays an important role in diagnosing Alzheimer's disease.
+The 3Dimage of the brain provides a great opportunity for physicians to spot abnormalities. 
+These abnormalities can be markers of Alzheimer's disease, but could also be symptoms of other cognitive conditions
+\cite{Envision_Radiology}. Alzheimer's is primary connected to atrophy in key regions like the hippocampus, the core memory area of the brain, and parietal lobe. 
+\placeholder{
+    \begin{enumerate}
+        \item K-space: It is a collection of spatial frequencies captured after applying the pulse sequences.
+        The (x,y) coordinates in this space represent the frequency and phase for every pixel of the image generated after applying inverse Fourier transform to the captured frequency data.
+        \item Fourier transform: is a mathematical technique that allows a signal to be decomposed into a sum of sine or cosine waves of different frequencies, phases and amplitudes.
+        This link can be followed for further reading about Fourier transform
+    \end{enumerate}
+}
+
+\section{Foundation Models}
+\label{sec:Foundation MOdels}
+ Foundation models can be used as a Feature extractor 
+ the workflow would be MRI-Images-> Foundation Models -> embedding matrix (Feature representation) -> Classification model -> 6 classes
+ \textbf{Three ways of foundation model approches}
+ \begin{enumerate}
+    \item Frozen Foundation model. You dont change the weights of the model itself, instead you finetue the classifier. 
+    \item Fine tune the foundation model. Fine tune is much more computational ecpensive, and can be prone to overfitting in smaller data sets
+    \item Zero-shot classification. No classification needed. 
+ \end{enumerate}
+\section{Aim and Research Questions}
+\label{sec:aim}
+
+\placeholder{State the main aim and, where appropriate, explicit research questions
+or hypotheses.}

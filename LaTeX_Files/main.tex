@@ -1,0 +1,91 @@
+% ============================================================================
+% MASTER'S THESIS / SCIENTIFIC REPORT TEMPLATE
+% Compatible with Overleaf and local LaTeX installations.
+% Main file: KEEP THIS FILE IN THE PROJECT ROOT.
+% ============================================================================
+
+\documentclass[12pt,a4paper,oneside,open=any]{scrreprt}
+
+% ---------------------------------------------------------------------------
+% DOCUMENT METADATA — EDIT THESE FOR EACH NEW REPORT / THESIS
+% ---------------------------------------------------------------------------
+\newcommand{\university}{Universidade Católica Portuguesa}
+\newcommand{\school}{Escola Superior de Biotecnologia}
+\newcommand{\programme}{MSc Biomedical Engineering}
+\newcommand{\thesistype}{Biomedical Project}
+\newcommand{\thesistitle}{AI-Based Characterization of Clinical Alzheimer’s Disease Stages from Structural Brain MRI Using Foundation Model Representations}
+\newcommand{\thesissubtitle}{} % Leave empty if you do not need a subtitle.
+\newcommand{\authorname}{Frederik Dürr // Lucca Moreira // Laurindo }
+\newcommand{\supervisor}{Prof. Dr. Pedro Rodriges}
+\newcommand{\cosupervisor}{Dr. Ines Barbosa} % Leave empty if none.
+\newcommand{\institutionlocation}{Porto, Portugal}
+\newcommand{\submissiondate}{2027}
+
+% All package/configuration settings are kept in one file.
+\input{config/preamble.tex}
+
+% ---------------------------------------------------------------------------
+% DOCUMENT
+% ---------------------------------------------------------------------------
+\begin{document}
+
+
+% ===== TITLE PAGE ===========================================================
+\input{frontmatter/titlepage.tex}
+
+% ===== FRONT MATTER: ROMAN NUMERALS ========================================
+\cleardoublepage
+\pagenumbering{roman}
+\setcounter{page}{1}
+\pagestyle{scrheadings}
+
+% ----- Abstract -------------------------------------------------------------
+\input{frontmatter/abstract.tex}
+
+% ----- Optional sections ----------------------------------------------------
+% Uncomment these when needed:
+% \input{frontmatter/acknowledgements.tex}
+% \input{frontmatter/declaration.tex}
+
+% ----- Table of contents ----------------------------------------------------
+\cleardoublepage
+\tableofcontents
+
+% ----- List of figures ------------------------------------------------------
+\cleardoublepage
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+% ----- List of tables -------------------------------------------------------
+\cleardoublepage
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+% ----- Acronyms / abbreviations --------------------------------------------
+% The glossary is optional. See frontmatter/abbreviations.tex.
+\cleardoublepage
+\input{frontmatter/abbreviations.tex}
+
+% ===== MAIN MATTER: ARABIC NUMERALS ========================================
+\cleardoublepage
+% Reset page numbers without creating duplicate PDF hyperlink anchors.
+\hypersetup{pageanchor=false}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\hypersetup{pageanchor=true}
+
+\include{chapters/01-introduction}
+\include{chapters/02-methods}
+\include{chapters/03-results}
+\include{chapters/04-discussion}
+\include{chapters/05-conclusion}
+
+% ===== REFERENCES ===========================================================
+\cleardoublepage
+\printbibliography[heading=bibintoc,title={References}]
+
+% ===== APPENDICES ===========================================================
+\appendix
+\include{appendices/A-additional-material}
+
+\end{document}

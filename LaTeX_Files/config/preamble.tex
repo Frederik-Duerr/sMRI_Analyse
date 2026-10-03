@@ -1,0 +1,170 @@
+% ============================================================================
+% PREAMBLE / GLOBAL DOCUMENT SETTINGS
+% ============================================================================
+
+% ---------------------------------------------------------------------------
+% PAGE / DOCUMENT SETUP
+% ---------------------------------------------------------------------------
+\usepackage[
+    a4paper,
+    left=3.0cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm,
+    head=18pt
+]{geometry}
+
+% ---------------------------------------------------------------------------
+% FONT, LANGUAGE, TYPOGRAPHY
+% ---------------------------------------------------------------------------
+% pdfLaTeX is deliberately used because it is robust and widely supported.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath} % Times-like text + math
+\usepackage[english]{babel}
+\usepackage{microtype}
+\usepackage{csquotes}
+
+% ---------------------------------------------------------------------------
+% LINE SPACING / PARAGRAPHS
+% ---------------------------------------------------------------------------
+\usepackage{setspace}
+\onehalfspacing                         % Main text = 1.5 line spacing
+\setlength{\parindent}{1.25em}          % First-line paragraph indentation
+\setlength{\parskip}{0pt}               % No extra blank line between paragraphs
+
+% ---------------------------------------------------------------------------
+% HEADERS / FOOTERS / PAGE NUMBERS
+% ---------------------------------------------------------------------------
+% KOMA's own page-style package is preferred for KOMA-Script classes.
+\usepackage[automark]{scrlayer-scrpage}
+\clearpairofpagestyles
+\ofoot{\pagemark}                        % Page number = bottom right
+\pagestyle{scrheadings}
+\renewcommand*{\chapterpagestyle}{scrheadings}
+\setkomafont{pagehead}{\normalfont}
+\setkomafont{pagenumber}{\normalfont}
+
+% ---------------------------------------------------------------------------
+% SECTION HEADINGS
+% ---------------------------------------------------------------------------
+\setkomafont{chapter}{\normalfont\bfseries\LARGE}
+\setkomafont{section}{\normalfont\bfseries\Large}
+\setkomafont{subsection}{\normalfont\bfseries\large}
+\setkomafont{subsubsection}{\normalfont\bfseries\normalsize}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+% ---------------------------------------------------------------------------
+% FIGURES
+% ---------------------------------------------------------------------------
+\usepackage{graphicx}
+\graphicspath{{./figures/}}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage{caption}
+\captionsetup{
+    font=small,
+    labelfont=bf,
+    justification=centering,
+    singlelinecheck=false
+}
+
+% ---------------------------------------------------------------------------
+% TABLES
+% ---------------------------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{threeparttable}
+
+% ---------------------------------------------------------------------------
+% MATH / UNITS / CHEMISTRY
+% ---------------------------------------------------------------------------
+\usepackage{amsmath,bm}
+\usepackage{siunitx}
+\sisetup{
+    separate-uncertainty=true,
+    per-mode=symbol
+}
+\usepackage[version=4]{mhchem}
+
+% ---------------------------------------------------------------------------
+% LISTS / QUOTATIONS
+% ---------------------------------------------------------------------------
+\usepackage{enumitem}
+\setlist{nosep}
+\setlist[itemize]{leftmargin=*}
+\setlist[enumerate]{leftmargin=*}
+
+% ---------------------------------------------------------------------------
+% CODE / PYTHON EXCERPTS (OPTIONAL)
+% ---------------------------------------------------------------------------
+\usepackage{listings}
+\usepackage{upquote}
+\lstdefinelanguage{Python}{
+    morekeywords={and,as,assert,async,await,break,class,continue,def,del,elif,else,except,False,finally,for,from,global,if,import,in,is,lambda,None,nonlocal,not,or,pass,raise,return,True,try,while,with,yield},
+    sensitive=true
+}
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\scriptsize,
+    numbersep=8pt,
+    frame=single,
+    breaklines=true,
+    showstringspaces=false,
+    columns=fullflexible
+}
+
+% ---------------------------------------------------------------------------
+% ACRONYMS / ABBREVIATIONS
+% ---------------------------------------------------------------------------
+\usepackage[acronym,nonumberlist]{glossaries}
+\input{frontmatter/acronyms.tex}
+\makenoidxglossaries
+
+% ---------------------------------------------------------------------------
+% REFERENCES / BIBLIOGRAPHY
+% ---------------------------------------------------------------------------
+% Numeric, citation-order references are a common choice in biomedical
+% sciences. Change `style=numeric-comp` later if your programme requires APA,
+% Harvard, Vancouver, etc.
+\usepackage[
+    backend=biber,
+    style=numeric-comp,
+    sorting=none,
+    maxbibnames=99,
+    giveninits=true,
+    doi=true,
+    url=true,
+    isbn=false,
+    eprint=false
+]{biblatex}
+\addbibresource{references/references.bib}
+
+% ---------------------------------------------------------------------------
+% REFERENCES BETWEEN ELEMENTS
+% ---------------------------------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+% ---------------------------------------------------------------------------
+% PDF METADATA
+% ---------------------------------------------------------------------------
+\hypersetup{
+    pdftitle={\thesistitle},
+    pdfauthor={\authorname},
+    pdfsubject={\thesistype},
+    pdfcreator={LaTeX with Overleaf}
+}
+
+% ---------------------------------------------------------------------------
+% SMALL CUSTOM COMMANDS
+% ---------------------------------------------------------------------------
+\newcommand{\placeholder}[1]{\textit{[Replace this placeholder: #1]}}

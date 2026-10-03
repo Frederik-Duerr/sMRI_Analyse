@@ -1,0 +1,52 @@
+% ============================================================================
+% TITLE PAGE
+% ============================================================================
+\begin{titlepage}
+    \thispagestyle{empty}
+    \centering
+
+    % Optional UCP logo. Upload your approved institutional logo as:
+    % figures/logo_ucp.pdf
+    \IfFileExists{figures/logo_ucp.pdf}{%
+        \includegraphics[width=0.72\textwidth]{logo_ucp}\par\vspace{1.2cm}%
+    }{%
+        \vspace*{0.8cm}
+        {\Large \textbf{\university}}\par
+        \vspace{0.25cm}
+    }
+
+    {\large \textbf{\school}}\par
+    \vspace{0.25cm}
+    {\large \programme}\par
+
+    \vfill
+
+    {\LARGE\bfseries \thesistitle\par}
+    \ifx\thesissubtitle\empty\else
+        \vspace{0.5cm}
+        {\Large \thesissubtitle\par}
+    \fi
+
+    \vspace{1.5cm}
+    {\large \textbf{\thesistype}}\par
+    \vspace{0.8cm}
+
+    {\large\textbf{Author}}\par
+    {\large \authorname\par}
+
+    \vspace{0.8cm}
+    {\large\textbf{Supervisor}}\par
+    {\large \supervisor\par}
+
+    \ifx\cosupervisor\empty\else
+        \vspace{0.5cm}
+        {\large\textbf{Co-supervisor}}\par
+        {\large \cosupervisor\par}
+    \fi
+
+    \vfill
+
+    {\large \institutionlocation\par}
+    {\large \submissiondate\par}
+
+\end{titlepage}
