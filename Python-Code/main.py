@@ -3,6 +3,7 @@ from lable import label_change
 from Image_control import image_control
 from Image_control import Image_histogram
 from Patient_Level_Data_Splitting import patient_Table
+from transform_images import Image_transforms_train_val
 import pandas as pd
 import torch
 from test_train_split import test_train_split
@@ -33,16 +34,22 @@ patient_id_Diagnosis = patient_Table(meta_data_frame)
 
 X_train, X_test, y_train, y_test, X_val,y_val = test_train_split(patient_id_Diagnosis)
 
-y_train,y_test,y_val = spliting_patient_id_and_images(meta_data_frame, X_train, X_test, X_val)
+y_train,y_test,y_val, X_train_image_path, X_test_image_path, X_val_image_path = spliting_patient_id_and_images(meta_data_frame, X_train, X_test, X_val)
 
-print(y_train[0:5])
+X_train_tensors, X_val_tensors = Image_transforms_train_val(X_train_image_path,X_val_image_path)
 
-'''
-model = DINOv2Base() 
 
-x = torch.load(X_test_images)
 
-# Feature extraction
-features = model(x)
-print(features)
-'''
+model = DINOv2Base(model_name="dinov2_vitb14") # Has less Parameters instead on 300 Million it has 86 Million
+model.eval()
+
+batch_size = 4
+with torch.no_grad(): # Important because we are not training the model
+    for i in range(0,len(X_train_tensors),batch_size):
+        batch = X_train_tensors[i:i + batch_size]
+
+        x = torch.stack(batch)
+
+        features = model(x)
+
+print(features.shape)

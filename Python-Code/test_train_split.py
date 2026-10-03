@@ -25,18 +25,24 @@ def test_train_split(id_diag):
 # Gathering all the images belonging to the patioent id´s of each set.
 def spliting_patient_id_and_images(meta_data_frame, X_train, X_test, X_val):
     y_train = meta_data_frame.loc[
-    meta_data_frame['patient_id'].isin(X_train),'image_path'
-]
-    X_train = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_train),'lable']
+    meta_data_frame['patient_id'].isin(X_train),'lable'
+]   
+    y_train = y_train.reset_index(
+    )
+    X_train = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_train),'image_path']
 
     y_val = meta_data_frame.loc[
-    meta_data_frame['patient_id'].isin(X_val),'image_path'
+    meta_data_frame['patient_id'].isin(X_val),'lable'
 ]
-    X_test = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_test),'lable']
+    y_val = y_val.reset_index(
+    )
+    X_test = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_test),'image_path']
 
     y_test = meta_data_frame.loc[
-    meta_data_frame['patient_id'].isin(X_test),'image_path'
+    meta_data_frame['patient_id'].isin(X_test),'lable'
 ]
-    X_val = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_val),'lable']
-    
+    y_test = y_test.reset_index(
+    )
+    X_val = meta_data_frame.loc[meta_data_frame['patient_id'].isin(X_val),'image_path']
+
     return y_train,y_test,y_val, X_train, X_test, X_val
