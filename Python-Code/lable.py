@@ -2,7 +2,7 @@ import pandas as pd
 
 def label_change(dataframe):
     diagnose = dataframe['diagnosis']
-    dataframe['label'] = diagnose.map({
+    dataframe['lable'] = diagnose.map({
         'AD' : 0,
         'CN' : 1,
         'EMCI' : 2,
