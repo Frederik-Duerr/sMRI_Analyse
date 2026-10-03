@@ -54,3 +54,5 @@ pre_processed/
 # OS
 .DS_Store
 Thumbs.db
+# Ignoring Copyright papers
+Papers/
