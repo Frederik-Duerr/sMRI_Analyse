@@ -16,14 +16,21 @@ acquisition protocol, preprocessing, and relevant ethics/data-governance aspects
 \section{Image Preprocessing}
 \label{sec:preprocessing}
 \placeholder{This part we can reference to the paper they have published in the beginning of this year}
-Image processing is a highly relevant procedure for deploying statistical pipelines. One of the methods of preprocessing in MRI images is the bias field correction. The bias fieldis a 
-low-frequency spatially variying MRI artifact resulting from spatial inhomogeneity of the magnetic field, variations in the sensetivity of the reception coil, and the interacion between the magnetic field and the human body.
-The bias fiels is dependent on the strength of the maganetoc filed. By increasing the magnetic field, which increases the spatial resolution also increases the bias field, resulting in a higher Signal to nois ration. 
+Image processing is a highly relevant procedure for deploying statistical pipelines. Without a solid and robust preprocessing the downstream task will not produce any relevant information. For this project we gathered pre-procecced sMRI images.
+The fully description of the pre-processing steps can be investigated in J. Menzes et al. \cite{MENEZES2026111143}. Here we are going to explain the pre-processing in a short version.
+ 
+One of the methods of preprocessing in MRI images is the bias field correction. The bias fields is a 
+low-frequency spatially varying MRI artifact resulting from spatial inhomogeneity of the magnetic field, variations in the sensitivity of the reception coil, and the interaction between the magnetic field and the human body.
+The bias fiels is dependent on the strength of the magnetic filed. By increasing the magnetic field, which increases the spatial resolution also increases the bias field, resulting in a higher Signal to noise ration. 
 \\
-another important pre-processing method is the brain exctraction, skull-stripping. Image contrast from nonbrain tissue such as fat, skull, or neck can cuse issues with downstream
+Followed by the Image registration. This step is fundamental for further analysis. It aligns all  
+\\
+another important pre-processing method is the brain extraction, skull-stripping. Image contrast from non-brain tissue such as fat, skull, or neck can cause issues with downstream
 analysis starting with the brain tissue segmentation. 
-The brain extraction generates a mask that identifies brain voxels comprising gray-matter, white-matter, and Cerebrospinal fluid (CSF) of the cerebral corte and subcortical structures, 
+The brain extraction generates a mask that identifies brain voxels comprising gray-matter, white-matter, and Cerebrospinal fluid (CSF) of the cerebral sorte and subcortical structures, 
 including the brain stemm and the cerebellum.
+
+
 \textbf{Temporal Signal-to-Noise Ratio:} Signal to nois ration is evaluated by the mean signal intesity in eahc voxel devided by the standarddiviation
 of the signal across time points.
 \textbf{Spatial Normalisation:} 
