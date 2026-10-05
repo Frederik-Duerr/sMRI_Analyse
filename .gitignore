@@ -58,4 +58,4 @@ Thumbs.db
 Papers/
 
 # Ignore ppp
-.pptx
+*.pptx
