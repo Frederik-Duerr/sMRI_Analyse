@@ -30,26 +30,60 @@ meta_data_frame = image_control(meta_data_frame)
 # print(meta_data_frame.duplicated().sum()) # Zero Duplicates
 
 patient_id_Diagnosis = patient_Table(meta_data_frame)
-# print(patient_id_Diagnosis.columns)
 
-X_train, X_test, y_train, y_test, X_val,y_val = test_train_split(patient_id_Diagnosis)
+print("Original number of patients:")
+print(len(patient_id_Diagnosis))
 
-y_train,y_test,y_val, X_train_image_path, X_test_image_path, X_val_image_path = spliting_patient_id_and_images(meta_data_frame, X_train, X_test, X_val)
+# --------------------------------------------------
+# QUICK TEST: maximum 10 patients per diagnosis
+# --------------------------------------------------
+
+patient_id_Diagnosis = (
+    patient_id_Diagnosis
+    .groupby('lable', group_keys=False)
+    .sample(n=10, random_state=42)
+    .reset_index(drop=True)
+)
+
+print("Patients per diagnosis:")
+print(patient_id_Diagnosis['lable'].value_counts())
+
+X_train, X_test, y_train, y_test, X_val, y_val = test_train_split(
+    patient_id_Diagnosis
+)
+
+# X_train, X_test, y_train, y_test, X_val,y_val = test_train_split(patient_id_Diagnosis)
+
+y_train, y_test, y_val, X_train_image_path, X_test_image_path, X_val_image_path = \
+    spliting_patient_id_and_images(
+        meta_data_frame,
+        X_train,
+        X_test,
+        X_val
+    )
+print(f'Y Train {y_train[:5]}')
+print(f'Y test {y_test[:5]}')
+print(f' Y Val {y_val[:5]}')
 
 X_train_tensors, X_val_tensors = Image_transforms_train_val(X_train_image_path,X_val_image_path)
 
+print("Number of training images:", len(X_train_tensors))
+print("Number of validation images:", len(X_val_tensors))
 
-
-model = DINOv2Base(model_name="dinov2_vitb14") # Has less Parameters instead on 300 Million it has 86 Million
+model = DINOv2Base(model_name="dinov2_vitb14")
 model.eval()
 
 batch_size = 4
-with torch.no_grad(): # Important because we are not training the model
-    for i in range(0,len(X_train_tensors),batch_size):
-        batch = X_train_tensors[i:i + batch_size]
 
+with torch.no_grad():
+    for i in range(0, len(X_train_tensors), batch_size):
+
+        batch = X_train_tensors[i:i + batch_size]
         x = torch.stack(batch)
 
         features = model(x)
 
-print(features.shape)
+        print(
+            f"Batch {i // batch_size + 1}: "
+            f"{x.shape} → {features.shape}"
+        )

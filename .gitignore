@@ -56,3 +56,6 @@ pre_processed/
 Thumbs.db
 # Ignoring Copyright papers
 Papers/
+
+# Ignore ppp
+.pptx
