@@ -76,6 +76,10 @@ model.eval()
 batch_size = 10
 
 with torch.no_grad():
+    final_feature_table_axial = []
+    final_feature_table_sagittal = []
+    final_feature_table_coronal =[]
+
     for i in range(0, len(X_train_tensors_axial), batch_size):
 
         batch = X_train_tensors_axial[i:i + batch_size]
@@ -87,4 +91,36 @@ with torch.no_grad():
             f"Batch {i // batch_size + 1}: "
             f"{x.shape} → {features.shape}"
         )
-        
+        final_feature_table_axial.append(features)
+    final_feature_table_axial = torch.cat(final_feature_table_axial,dim=0)
+    print(final_feature_table_axial.shape)
+
+    for i in range(0, len(X_train_tensors_sagittal), batch_size):
+
+        batch = X_train_tensors_sagittal[i:i + batch_size]
+        x = torch.stack(batch)
+
+        features = model(x)
+
+        print(
+            f"Batch {i // batch_size + 1}: "
+            f"{x.shape} → {features.shape}"
+        )
+        final_feature_table_sagittal.append(features)
+    final_feature_table_sagittal = torch.cat(final_feature_table_sagittal,dim=0)
+    print(final_feature_table_sagittal.shape)
+
+    for i in range(0, len(X_train_tensors_coronal), batch_size):
+
+        batch = X_train_tensors_coronal[i:i + batch_size]
+        x = torch.stack(batch)
+
+        features = model(x)
+
+        print(
+            f"Batch {i // batch_size + 1}: "
+            f"{x.shape} → {features.shape}"
+        )
+        final_feature_table_coronal.append(features)
+    final_feature_table_coronal = torch.cat(final_feature_table_coronal,dim=0)
+    print(final_feature_table_coronal.shape)
