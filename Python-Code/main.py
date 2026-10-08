@@ -4,6 +4,7 @@ from Image_control import image_control
 from Image_control import Image_histogram
 from Patient_Level_Data_Splitting import patient_Table
 from transform_images import Image_transforms_train_val
+from test_with_less_data import test_data
 import pandas as pd
 import torch
 from test_train_split import test_train_split
@@ -38,47 +39,46 @@ print(len(patient_id_Diagnosis))
 # QUICK TEST: maximum 10 patients per diagnosis
 # --------------------------------------------------
 
-patient_id_Diagnosis = (
-    patient_id_Diagnosis
-    .groupby('lable', group_keys=False)
-    .sample(n=10, random_state=42)
-    .reset_index(drop=True)
-)
+patient_id_Diagnosis_test = test_data(patient_id_Diagnosis,6)
 
 print("Patients per diagnosis:")
-print(patient_id_Diagnosis['lable'].value_counts())
+print(patient_id_Diagnosis_test['lable'].value_counts())
 
-X_train, X_test, y_train, y_test, X_val, y_val = test_train_split(
-    patient_id_Diagnosis
+X_train,X_test,y_train,y_test = test_train_split(
+    patient_id_Diagnosis_test,'deep'
 )
 
 # X_train, X_test, y_train, y_test, X_val,y_val = test_train_split(patient_id_Diagnosis)
 
-y_train, y_test, y_val, X_train_image_path, X_test_image_path, X_val_image_path = \
+y_train, y_test, X_train_image_path, X_test_image_path = \
     spliting_patient_id_and_images(
         meta_data_frame,
         X_train,
         X_test,
-        X_val
+        # X_val
     )
+
 print(f'Y Train {y_train[:5]}')
 print(f'Y test {y_test[:5]}')
-print(f' Y Val {y_val[:5]}')
+# print(f' Y Val {y_val[:5]}')
 
-X_train_tensors, X_val_tensors = Image_transforms_train_val(X_train_image_path,X_val_image_path)
+X_train_tensors_axial, X_train_tensors_sagittal,X_train_tensors_coronal = Image_transforms_train_val(X_train_image_path)
 
-print("Number of training images:", len(X_train_tensors))
-print("Number of validation images:", len(X_val_tensors))
+print("Number of training images:", len(X_train_tensors_axial))
+print("Number of training images:", len(X_train_tensors_sagittal))
+print("Number of training images:", len(X_train_tensors_coronal))
+# print("Number of validation images:", len(X_val_tensors))
+
 
 model = DINOv2Base(model_name="dinov2_vitb14")
 model.eval()
 
-batch_size = 4
+batch_size = 10
 
 with torch.no_grad():
-    for i in range(0, len(X_train_tensors), batch_size):
+    for i in range(0, len(X_train_tensors_axial), batch_size):
 
-        batch = X_train_tensors[i:i + batch_size]
+        batch = X_train_tensors_axial[i:i + batch_size]
         x = torch.stack(batch)
 
         features = model(x)
@@ -87,3 +87,4 @@ with torch.no_grad():
             f"Batch {i // batch_size + 1}: "
             f"{x.shape} → {features.shape}"
         )
+        
