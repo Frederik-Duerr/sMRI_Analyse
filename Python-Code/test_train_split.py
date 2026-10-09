@@ -13,7 +13,7 @@ def test_train_split(id_diag,model):
         stratify=y
         )  
         return X_train,X_test,y_train,y_test
-    else:  
+    elif model =='machien':  
         X = id_diag['patient_id']
         y = id_diag['lable']
         
@@ -54,8 +54,8 @@ def spliting_patient_id_and_images(meta_data_frame, X_train, X_test):
     y_test = test_data[['patient_id', 'lable']]
     # y_val = val_data[['patient_id', 'lable']]
 
-    X_train_image_path = train_data[['image_path','Orientation']]
-    X_test_image_path = test_data[['image_path','Orientation']]
+    X_train_image_path = train_data[['image_path','Orientation','patient_id']]
+    X_test_image_path = test_data[['image_path','Orientation','patient_id']]
     # X_val_image_path = val_data['image_path']
 
     return (
