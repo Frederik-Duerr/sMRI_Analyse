@@ -73,15 +73,12 @@ print(f'Y Train {y_train[:5]}\n')
 print(f'Y test {y_test[:5]}\n')
 print(X_test_image_path.head(10))
 print(X_test_image_path)
-'''
-print('That is the number of axial images per id in the test set: ') , print(X_test_image_path.loc[X_test_image_path['Orientation']=='axial'].groupby('patient_id'))
-print('That is the number of sagittal images per id in the test set: '),print(X_test_image_path.loc[X_test_image_path['Orientation']=='sagittal'].value_counts('patient_id'))
-print('That is the number of coronal images per id in the test set: '),print(X_test_image_path.loc[X_test_image_path['Orientation']=='coronal'].value_counts('patient_id')) # All 619 within 6 Patient ID´s
-print('That is the number of axial images per id in the test set: '),print(X_train_image_path.loc[X_train_image_path['Orientation']=='axial'].value_counts('patient_id')) # All 619 with 30 Patients ID´s 
 
-'''
+Index_Test = index_tracking(X_test_image_path)
+Index_Train = index_tracking(X_train_image_path)
 
-print(index_tracking(y_train, y_test, X_train_image_path, X_test_image_path))
+print(Index_Test.items())
+print(Index_Train.items())
 
 '''
 X_train_tensors_axial, X_train_tensors_sagittal,X_train_tensors_coronal = Image_transforms_train_val(X_train_image_path)
