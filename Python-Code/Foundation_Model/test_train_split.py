@@ -1,19 +1,6 @@
 from sklearn.model_selection import train_test_split
 
-def test_train_split(id_diag,model):
-    if model == 'deep':
-        X = id_diag['patient_id']
-        y = id_diag['lable']
-
-        X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=0.15,
-        random_state=45,
-        stratify=y
-        )  
-        return X_train,X_test,y_train,y_test
-    elif model =='machien':  
+def test_train_split(id_diag): 
         X = id_diag['patient_id']
         y = id_diag['lable']
         
@@ -36,7 +23,7 @@ def test_train_split(id_diag,model):
 
 
 # Gathering all the images belonging to the patient id´s of each set.
-def spliting_patient_id_and_images(meta_data_frame, X_train, X_test):
+def spliting_patient_id_and_images(meta_data_frame, X_train, X_test,X_val):
 
     train_data = meta_data_frame[
         meta_data_frame['patient_id'].isin(X_train)
@@ -45,24 +32,24 @@ def spliting_patient_id_and_images(meta_data_frame, X_train, X_test):
     test_data = meta_data_frame[
         meta_data_frame['patient_id'].isin(X_test)
     ].copy()
-    '''
+
     val_data = meta_data_frame[
         meta_data_frame['patient_id'].isin(X_val)
     ].copy()
-    '''
+
     y_train = train_data[['patient_id', 'lable']]
     y_test = test_data[['patient_id', 'lable']]
-    # y_val = val_data[['patient_id', 'lable']]
+    y_val = val_data[['patient_id', 'lable']]
 
     X_train_image_path = train_data[['image_path','Orientation','patient_id']]
     X_test_image_path = test_data[['image_path','Orientation','patient_id']]
-    # X_val_image_path = val_data['image_path']
+    X_val_image_path = val_data['image_path']
 
     return (
         y_train,
         y_test,
-        # y_val,
+        y_val,
         X_train_image_path,
         X_test_image_path,
-        # X_val_image_path
+        X_val_image_path
     )

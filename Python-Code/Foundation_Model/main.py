@@ -1,3 +1,11 @@
+''' Importing Libaries'''
+import pandas as pd
+import torch
+from test_train_split import test_train_split
+from test_train_split import spliting_patient_id_and_images
+from dinov2_base import DINOv2Base
+
+'''Importing Functions form Files'''
 from Loading_data import read_folders, sclicing_image_features
 from lable import label_change
 from Image_control import image_control
@@ -5,18 +13,19 @@ from Image_control import image_control
 from Patient_Level_Data_Splitting import patient_Table
 from transform_images import Image_transforms_train_val
 from test_with_less_data import test_data
-import pandas as pd
-import torch
-from test_train_split import test_train_split
-from test_train_split import spliting_patient_id_and_images
-from dinov2_base import DINOv2Base
 from index_patient_tracking import index_tracking
-# Creating the main Path where rthe data is stored
-main_path = 'C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Pre_processed' # if you want to run the code on your PC, you need to set the path for your local 
-# Reading in the folders of the Data
-image_data = read_folders(main_path=main_path)
+from concat_feature_frames import concat_feature_frames
 
-meta_data_frame = pd.DataFrame(image_data)
+# Creating the main Path where the data is stored as well as the extracted feature
+main_path = 'C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Pre_processed' 
+feature_folder = 'C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Features/dinov2_features'
+
+# Reading in the folders of the Data
+# image_data = read_folders(main_path=main_path)
+feature_data = concat_feature_frames(feature_folder)
+# meta_data_frame = pd.DataFrame(image_data)
+meta_data_frame = pd.DataFrame(feature_data)
+
 # Storing meta date such as Patient ID, Diagnosis, sclice number, and angle
 meta_data_frame = sclicing_image_features(meta_data_frame=meta_data_frame)
 
@@ -50,8 +59,8 @@ print(patient_id_Diagnosis_test['lable'].value_counts())
 print(patient_id_Diagnosis_test.sort_values('patient_id',ascending=False).reset_index())
 print(patient_id_Diagnosis_test.head(10))
 
-X_train,X_test,y_train,y_test = test_train_split(
-    patient_id_Diagnosis_test,'deep'
+X_train, X_test, y_train, y_test, X_val,y_val = test_train_split(
+    patient_id_Diagnosis_test
     )
 
 # Fter splitting the data we remain the same index for the patient ID as in the patient_id_Diagnosis_test data Frame. Can we use that to  track the id after 
@@ -60,86 +69,14 @@ print(f'X Train Data Frame{X_train.head(10)}')
 
 
 
-
-y_train, y_test, X_train_image_path, X_test_image_path = \
-    spliting_patient_id_and_images(
+y_train, y_test, y_val, X_train_image_path, X_test_image_path, X_val_image_path = spliting_patient_id_and_images(
         meta_data_frame,
         X_train,
         X_test,
-        # X_val
+        X_val
     )
 
 print(f'Y Train {y_train[:5]}\n')
 print(f'Y test {y_test[:5]}\n')
 print(X_test_image_path.head(10))
 print(X_test_image_path)
-
-Index_Test = index_tracking(X_test_image_path)
-Index_Train = index_tracking(X_train_image_path)
-
-print(Index_Test.items())
-print(Index_Train.items())
-
-'''
-X_train_tensors_axial, X_train_tensors_sagittal,X_train_tensors_coronal = Image_transforms_train_val(X_train_image_path)
-
-print("Number of training images:", len(X_train_tensors_axial))
-print("Number of training images:", len(X_train_tensors_sagittal))
-print("Number of training images:", len(X_train_tensors_coronal))
-# print("Number of validation images:", len(X_val_tensors))
-
-model = DINOv2Base(model_name="dinov2_vitb14")
-model.eval()
-
-batch_size = 10
-
-with torch.no_grad():
-    final_feature_table_axial = []
-    final_feature_table_sagittal = []
-    final_feature_table_coronal =[]
-
-    for i in range(0, len(X_train_tensors_axial), batch_size):
-
-        batch = X_train_tensors_axial[i:i + batch_size]
-        x = torch.stack(batch)
-
-        features = model(x)
-
-        print(
-            f"Batch {i // batch_size + 1}: "
-            f"{x.shape} → {features.shape}"
-        )
-        final_feature_table_axial.append(features)
-    final_feature_table_axial = torch.cat(final_feature_table_axial,dim=0)
-    print(final_feature_table_axial.shape)
-
-    for i in range(0, len(X_train_tensors_sagittal), batch_size):
-
-        batch = X_train_tensors_sagittal[i:i + batch_size]
-        x = torch.stack(batch)
-
-        features = model(x)
-
-        print(
-            f"Batch {i // batch_size + 1}: "
-            f"{x.shape} → {features.shape}"
-        )
-        final_feature_table_sagittal.append(features)
-    final_feature_table_sagittal = torch.cat(final_feature_table_sagittal,dim=0)
-    print(final_feature_table_sagittal.shape)
-
-    for i in range(0, len(X_train_tensors_coronal), batch_size):
-
-        batch = X_train_tensors_coronal[i:i + batch_size]
-        x = torch.stack(batch)
-
-        features = model(x)
-
-        print(
-            f"Batch {i // batch_size + 1}: "
-            f"{x.shape} → {features.shape}"
-        )
-        final_feature_table_coronal.append(features)
-    final_feature_table_coronal = torch.cat(final_feature_table_coronal,dim=0)
-    print(final_feature_table_coronal.shape)
-'''
