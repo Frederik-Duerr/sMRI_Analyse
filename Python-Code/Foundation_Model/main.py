@@ -24,8 +24,13 @@ feature_folder = 'C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/S
 # image_data = read_folders(main_path=main_path)
 feature_data = concat_feature_frames(feature_folder)
 # meta_data_frame = pd.DataFrame(image_data)
-meta_data_frame = pd.DataFrame(feature_data)
+meta_data_frame = feature_data
 
+print(meta_data_frame.head())
+print(meta_data_frame.shape)
+print(meta_data_frame.info())
+
+'''
 # Storing meta date such as Patient ID, Diagnosis, sclice number, and angle
 meta_data_frame = sclicing_image_features(meta_data_frame=meta_data_frame)
 
@@ -80,3 +85,4 @@ print(f'Y Train {y_train[:5]}\n')
 print(f'Y test {y_test[:5]}\n')
 print(X_test_image_path.head(10))
 print(X_test_image_path)
+'''
