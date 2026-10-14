@@ -109,3 +109,9 @@ def sorting_by_orientation(dataFrame: pd.DataFrame):
 
     # Return the three DataFrames for further analysis
     return axial, coronal, sagittal
+
+
+def reading_in_orientations(file):
+    dataFrame = pd.read_parquet(file)
+    print(dataFrame.head())
+    return dataFrame
