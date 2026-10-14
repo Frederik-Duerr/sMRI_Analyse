@@ -43,6 +43,7 @@ datasets/
 Pre_processed/
 pre_processed/
 Features/
+Sorted_Diagnosis/
 # Model files
 *.pt
 *.pth

@@ -1,5 +1,6 @@
 import os
-
+import pandas as pd
+from  PIL import Image
 Data_folder = ['AD', 'CN', 'EMCI', 'LMCI', 'MCI', 'SMC']
 
 
@@ -25,9 +26,9 @@ def read_folders(main_path):
                     "diagnosis": diagnosis,
                     "patient_id": patient_id,
                     "filename": file
-                })         
+                })
+                         
     return image_data
-
 
 #print(meta_data_frame.sample(10))
 #print(meta_data_frame.info())
@@ -54,3 +55,57 @@ def sclicing_image_features(meta_data_frame):
     meta_data_frame['Sclice'] = Sclice
     meta_data_frame['Sclice_Number'] = Sclice_Number
     return meta_data_frame
+
+from pathlib import Path
+import pandas as pd
+import shutil
+
+
+def sorting_by_orientation(dataFrame: pd.DataFrame):
+    # Split the DataFrame by orientation
+    axial = dataFrame.loc[
+        dataFrame["Orientation"] == "axial"
+    ].copy()
+
+    coronal = dataFrame.loc[
+        dataFrame["Orientation"] == "coronal"
+    ].copy()
+
+    sagittal = dataFrame.loc[
+        dataFrame["Orientation"] == "sagittal"
+    ].copy()
+
+    # Setting the target directory
+    target_root = Path(
+        r"C:\Users\Johan\OneDrive - ucp.pt\Desktop\Privat\Portugal"
+        r"\UCP\Semester 3\Biomedical Project\MRI Project\Sorted_Diagnosis"
+    )
+
+    # Map each orientation to its corresponding DataFrame
+    orientation_frames = {
+        "Axial": axial,
+        "Coronal": coronal,
+        "Sagittal": sagittal
+    }
+
+    for orientation, frame in orientation_frames.items():
+
+        # Create the target directory if it does not exist
+        target_directory = target_root / orientation
+        target_directory.mkdir(parents=True, exist_ok=True)
+
+        for _, row in frame.iterrows():
+            image_path = Path(row["image_path"])
+            filename = Path(row["filename"]).name
+
+            target_path = target_directory / filename
+
+            # Copy the image without re-encoding it
+            shutil.copy2(image_path, target_path)
+
+        print(
+            f"{orientation}: {len(frame)} images processed."
+        )
+
+    # Return the three DataFrames for further analysis
+    return axial, coronal, sagittal
