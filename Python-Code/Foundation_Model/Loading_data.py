@@ -113,5 +113,5 @@ def sorting_by_orientation(dataFrame: pd.DataFrame):
 
 def reading_in_orientations(file):
     dataFrame = pd.read_parquet(file)
-    print(dataFrame.head())
+    # print(dataFrame.head())
     return dataFrame
