@@ -8,13 +8,14 @@ import pandas as pd
 # Project-specific functions
 from Loading_data import (
     read_folders,
-    sclicing_image_features,
+    extracting_meta_data,
     reading_in_orientations,
 )
+from test_train_split import test_train_split
 from lable import label_change
 from concat_feature_frames import concat_feature_frames
 from test_with_less_data import test_data
-
+from pipeline import pipeline
 
 # ============================================================
 # 2. PROJECT CONFIGURATION
@@ -37,8 +38,7 @@ FEATURE_PATHS = {
 }
 
 # Set the maximum number of patients per diagnosis for quick testing.
-MAX_PATIENTS_PER_DIAGNOSIS = 6
-
+MAX_PATIENTS_PER_DIAGNOSIS = 15
 
 # ============================================================
 # 3. LOAD IMAGE METADATA
@@ -49,14 +49,12 @@ MAX_PATIENTS_PER_DIAGNOSIS = 6
 image_data = read_folders(main_path=PREPROCESSED_DIR)
 
 # Convert the image information into a Pandas DataFrame.
-image_metadata_df = pd.DataFrame(image_data)
+image_data = pd.DataFrame(image_data)
 
 # Prepare the image metadata for subsequent feature integration.
 # Relevant information may include patient IDs, filenames,
 # image paths, diagnoses, and orientations.
-image_metadata_df = sclicing_image_features(
-    meta_data_frame=image_metadata_df
-)
+image_metadata_df = extracting_meta_data(meta_data_frame=image_data)
 
 
 # ============================================================
@@ -104,6 +102,9 @@ for orientation, feature_df in combined_feature_dfs.items():
     labeled_feature_dfs[orientation] = label_change(feature_df)
 
 
+# print(labeled_feature_dfs.items())
+
+
 # ============================================================
 # 7. QUICK TEST: LIMIT THE NUMBER OF PATIENTS
 # ============================================================
@@ -111,7 +112,8 @@ for orientation, feature_df in combined_feature_dfs.items():
 # Reduce the datasets for initial pipeline testing.
 # The function is expected to limit the number of patients per diagnosis.
 # Check that it selects consistent patient IDs across orientations.
-test_feature_dfs = test_data(
+
+test_feature_dfs = test_data( 
     labeled_feature_dfs,
     MAX_PATIENTS_PER_DIAGNOSIS,
 )
@@ -140,50 +142,10 @@ metadata_columns = [
     "lable",
 ]
 
-# Initialize dictionaries for the model inputs, target labels,
-# and patient IDs for each orientation.
-feature_matrices = {}
-target_vectors = {}
-patient_ids_by_orientation = {}
+Test_train_by_orientation= test_train_split(test_feature_dfs)
+print(Test_train_by_orientation['axial'].keys())
 
-# Extract numerical model inputs, diagnostic targets,
-# and patient identifiers from each orientation-specific DataFrame.
-for orientation, feature_df in test_feature_dfs.items():
-
-    # Keep patient identifiers for later patient-level splitting.
-    patient_ids_by_orientation[orientation] = feature_df["patient_id"]
-
-    # Extract the diagnostic labels.
-    target_vectors[orientation] = feature_df["lable"]
-
-    # Remove metadata columns from the feature matrix.
-    # Any remaining columns should be checked to ensure they are
-    # valid numerical DINOv2 features.
-    feature_matrices[orientation] = feature_df.drop(
-        columns=metadata_columns,
-        errors="ignore",
-    )
-
-
-# ============================================================
-# 9. VERIFY THE PREPARED DATA
-# ============================================================
-
-# Inspect the dimensions of each feature matrix and target vector.
-for orientation in feature_matrices:
-
-    print(f"\nOrientation: {orientation}")
-    print(f"Feature matrix shape: {feature_matrices[orientation].shape}")
-    print(f"Target vector shape: {target_vectors[orientation].shape}")
-    print(
-        f"Unique patients: "
-        f"{patient_ids_by_orientation[orientation].nunique()}"
-    )
-
-# The feature matrices and target vectors are now prepared
-# for the subsequent patient-level splitting and model evaluation.
-#
-# Important:
-# The train-test split and cross-validation are not performed above.
-# They should be added as a separate stage before model training.
-
+reports = pipeline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+print(reports['axial'])
+print(reports['coronal'])
+print(reports['sagittal'])

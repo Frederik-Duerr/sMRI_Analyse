@@ -1,8 +1,15 @@
 from sklearn.model_selection import train_test_split
 
-def test_train_split(id_diag): 
-        X = id_diag['patient_id']
-        y = id_diag['lable']
+def test_train_split(id_diag):
+    test_train_values = {
+        
+    }
+    for orientation, features in id_diag.items():
+        test_train_values[orientation] = {
+
+        }
+        X = id_diag[orientation].drop(['patient_id','lable','diagnosis','Orientation','filename'],axis=1)
+        y = id_diag[orientation]['lable']
         
         X_train_val, X_test, y_train_val, y_test = train_test_split(
                 X,
@@ -19,8 +26,15 @@ def test_train_split(id_diag):
         random_state=45,
         stratify=y_train_val
     )
-        return X_train, X_test, y_train, y_test, X_val,y_val
-
+        test_train_values[orientation].update({
+            'X_train': X_train,
+            'X_test': X_test,
+            'y_train': y_train,
+            'y_test': y_test,
+            'X_val': X_val,
+            'y_val': y_val
+        })
+    return test_train_values
 
 # Gathering all the images belonging to the patient id´s of each set.
 def spliting_patient_id_and_images(meta_data_frame, X_train, X_test,X_val):

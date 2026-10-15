@@ -33,7 +33,7 @@ def read_folders(main_path):
 #print(meta_data_frame.sample(10))
 #print(meta_data_frame.info())
 
-def sclicing_image_features(meta_data_frame):
+def extracting_meta_data(meta_data_frame):
     sclices = ['axial','coronal','sagittal']
     # print(type(data_frame_file_name)) # Its a series
     orientation = []
@@ -59,56 +59,6 @@ def sclicing_image_features(meta_data_frame):
 from pathlib import Path
 import pandas as pd
 import shutil
-
-
-def sorting_by_orientation(dataFrame: pd.DataFrame):
-    # Split the DataFrame by orientation
-    axial = dataFrame.loc[
-        dataFrame["Orientation"] == "axial"
-    ].copy()
-
-    coronal = dataFrame.loc[
-        dataFrame["Orientation"] == "coronal"
-    ].copy()
-
-    sagittal = dataFrame.loc[
-        dataFrame["Orientation"] == "sagittal"
-    ].copy()
-
-    # Setting the target directory
-    target_root = Path(
-        r"C:\Users\Johan\OneDrive - ucp.pt\Desktop\Privat\Portugal"
-        r"\UCP\Semester 3\Biomedical Project\MRI Project\Sorted_Diagnosis"
-    )
-
-    # Map each orientation to its corresponding DataFrame
-    orientation_frames = {
-        "Axial": axial,
-        "Coronal": coronal,
-        "Sagittal": sagittal
-    }
-
-    for orientation, frame in orientation_frames.items():
-
-        # Create the target directory if it does not exist
-        target_directory = target_root / orientation
-        target_directory.mkdir(parents=True, exist_ok=True)
-
-        for _, row in frame.iterrows():
-            image_path = Path(row["image_path"])
-            filename = Path(row["filename"]).name
-
-            target_path = target_directory / filename
-
-            # Copy the image without re-encoding it
-            shutil.copy2(image_path, target_path)
-
-        print(
-            f"{orientation}: {len(frame)} images processed."
-        )
-
-    # Return the three DataFrames for further analysis
-    return axial, coronal, sagittal
 
 
 def reading_in_orientations(file):
