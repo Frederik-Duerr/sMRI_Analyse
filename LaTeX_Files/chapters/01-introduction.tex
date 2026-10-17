@@ -27,8 +27,6 @@ Atrophy due to gray matter loss with anatomical magnetic resonance imaging or hy
 
 This diagnostic status is established by clinicians based on cognitive scores such as the Mini-Mental State Evaluation (MMSE),
 and the Clinical Dementia Rating. Even though assessment protocols are standardized, these scores can be highly variable based on the examiner and the physical/psychological condition of the patient during the test.
-\section{Foundation Models}
-\label{Foundation Models}
 
 \section{Structural MRI acquisition}
 \label{sec: Structural MRI acqusition}
@@ -85,7 +83,11 @@ These abnormalities can be markers of Alzheimer's disease, but could also be sym
  \end{enumerate}
 \section{Aim and Research Questions}
 \label{sec:aim}
-The aim of this project is to analyse whether pretrained foundation models can turn structural MRI slices into  useful numerical representations, then test whether those representations separate six clinical groups of alzheimers disease. 
-
+The aim of this study is to evaluate whether feature representations extracted from structural magnetic resonance imaging (sMRI) 
+using the pretrained foundation model DINOv2 achieve superior classification performance compared with features derived from a discrete wavelet transform (DWT2) 
+across multiple whole-brain frequency bands. Both approaches are applied to the same dataset and evaluated within a consistent classification framework to ensure 
+a fair and reproducible comparison. The classification task comprises six diagnostic groups representing different clinical stages of Alzheimer’s disease (AD) and 
+cognitively normal aging. By comparing these two feature extraction strategies, this study seeks to assess the potential of foundation model representations for 
+distinguishing between diagnostic groups and to determine their applicability to the automated characterization of Alzheimer’s disease stages using structural MRI. 
 \placeholder{State the main aim and, where appropriate, explicit research questions
 or hypotheses.}

@@ -1,5 +1,51 @@
 from sklearn.model_selection import train_test_split
 
+
+def test_train_split(id_diag):
+    test_train_values = {}
+
+    for orientation, features in id_diag.items():
+        test_train_values[orientation] = {}
+
+        # Patient IDs und Labels separat speichern
+        patient_ids = features['patient_id']
+        groups = features['diagnosis']
+        y = features['lable']
+
+        # Nur tatsächliche Features verwenden
+        X = features.drop(
+            ['patient_id','lable','diagnosis','Orientation','filename'],
+            axis=1
+        )
+
+        # Patienten statt einzelner Slices aufteilen
+        patient_table = features[
+            ['patient_id', 'lable']
+        ].drop_duplicates()
+
+        train_patients, test_patients = train_test_split(
+            patient_table['patient_id'],
+            test_size=0.15,
+            random_state=45,
+            stratify=patient_table['lable']
+        )
+
+        # Slices anhand der Patienten-IDs zuordnen
+        train_mask = patient_ids.isin(train_patients)
+        test_mask = patient_ids.isin(test_patients)
+
+        test_train_values[orientation].update({
+            'X_train': X.loc[train_mask],
+            'X_test': X.loc[test_mask],
+            'y_train': y.loc[train_mask],
+            'y_test': y.loc[test_mask],
+            'groups_train': groups.loc[train_mask],
+            'patient_ids_train': patient_ids.loc[train_mask],
+            'patient_ids_test': patient_ids.loc[test_mask]
+        })
+
+    return test_train_values
+'''
 def test_train_split(id_diag):
     test_train_values = {
         
@@ -35,7 +81,7 @@ def test_train_split(id_diag):
             'y_val': y_val
         })
     return test_train_values
-
+'''
 # Gathering all the images belonging to the patient id´s of each set.
 def spliting_patient_id_and_images(meta_data_frame, X_train, X_test,X_val):
 
