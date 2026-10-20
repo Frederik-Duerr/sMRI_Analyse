@@ -16,7 +16,7 @@ from lable import label_change
 from concat_feature_frames import concat_feature_frames
 from test_with_less_data import test_data
 from pipeline import pipeline
-
+from test_train_Split_Matlab import test_train_split_matlab
 # ============================================================
 # 2. PROJECT CONFIGURATION
 # ============================================================
@@ -70,9 +70,26 @@ for orientation, feature_path in FEATURE_PATHS.items():
         feature_path
     )
 
-
 # ============================================================
-# 5. COMBINE IMAGE METADATA AND DINOv2 FEATURES
+# 5. LOAD Matlab extracted Features
+# ============================================================
+
+axial = pd.read_csv('C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Features/axial_features_organized_with_Target.csv')
+sagittal = pd.read_csv('C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Features/sagittal_features_organized_with_Target.csv')
+coronal = pd.read_csv('C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Features/coronal_features_organized_with_Target.csv')
+
+feature_dictionary_matlab = {
+    'Axial': axial,
+    'Coronal' : coronal,
+    'Sagittal' : sagittal
+}
+# Homogenising the Column names
+for orientation, Data in feature_dictionary_matlab.items():
+    Data.rename(columns={'Target':'lable',
+                         'Group':'diagnosis',
+                         'PatientID':'patient_id'}, inplace = True)
+# ============================================================
+# 6. COMBINE IMAGE METADATA AND DINOv2 FEATURES
 # ============================================================
 
 # Combine the original image metadata with the corresponding
@@ -91,7 +108,7 @@ print(combined_feature_dfs["axial"].columns)
 
 
 # ============================================================
-# 6. ENCODE DIAGNOSTIC LABELS
+# 7. ENCODE DIAGNOSTIC LABELS
 # ============================================================
 
 # Apply the diagnostic label conversion separately to each orientation.
@@ -142,6 +159,7 @@ metadata_columns = [
     "lable",
 ]
 
+Test_Train_Split_Matlab = test_train_split_matlab(feature_dictionary_matlab)
 Test_train_by_orientation= test_train_split(test_feature_dfs)
 print(Test_train_by_orientation['axial'].keys())
 
@@ -149,3 +167,18 @@ reports = pipeline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable
 print(reports['axial'])
 print(reports['coronal'])
 print(reports['sagittal'])
+
+reports_matlab = pipeline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+
+with pd.ExcelWriter('FoundationModel.xlsx') as writer:
+    for orientation, Data in reports.items():
+        pd.DataFrame(Data).to_excel(
+            writer,
+            sheet_name=f'DINO_{orientation}'
+        )
+
+    for orientation, Data in reports_matlab.items():
+        pd.DataFrame(Data).to_excel(
+            writer,
+            sheet_name=f'MATLAB_{orientation}'
+        )
