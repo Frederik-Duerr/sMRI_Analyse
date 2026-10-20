@@ -1,6 +1,6 @@
 from sklearn.model_selection import train_test_split
 
-def test_train_split(id_diag):
+def test_train_split_matlab(id_diag):
     test_train_values = {}
 
     for orientation, features in id_diag.items():
