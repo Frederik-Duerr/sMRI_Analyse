@@ -1,2 +1,0 @@
-# pool sclices by orientation
-
