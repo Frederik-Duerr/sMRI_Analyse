@@ -22,7 +22,7 @@ from pipeline import hold_out_pipline
 # 2. PROJECT CONFIGURATION
 # ============================================================
 
-# Define the root directory of the MRI project.
+# Define the root directory of the Project
 PROJECT_DIR = (
     r"C:\Users\Johan\OneDrive - ucp.pt\Desktop\Privat\Portugal"
     r"\UCP\Semester 3\Biomedical Project\MRI Project"
@@ -73,7 +73,7 @@ for orientation, feature_path in FEATURE_PATHS.items():
 # ============================================================
 # 5. LOAD Matlab extracted Features
 # ============================================================
-
+# Set these paths to the directory where your features extraction data is stored
 axial = pd.read_csv('C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Features/axial_features_organized_with_Target.csv')
 sagittal = pd.read_csv('C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Features/sagittal_features_organized_with_Target.csv')
 coronal = pd.read_csv('C:/Users/Johan/OneDrive - ucp.pt/Desktop/Privat/Portugal/UCP/Semester 3/Biomedical Project/MRI Project/Features/coronal_features_organized_with_Target.csv')
@@ -94,6 +94,7 @@ for orientation, Data in feature_dictionary_matlab.items():
 
 # Combine the original image metadata with the corresponding
 # DINOv2 feature vectors for each orientation.
+
 combined_feature_dfs = {}
 
 for orientation, feature_df in orientation_feature_dfs.items():
@@ -158,9 +159,13 @@ metadata_columns = [
     "image_path",
     "lable",
 ]
-
+only_axial = test_feature_dfs.copy()
+del only_axial['sagittal']
+del only_axial['coronal']
+print(type(only_axial))
+print(only_axial['axial'])
 # Test_Train_Split_Matlab = test_train_split_matlab(feature_dictionary_matlab)
-Test_train_by_orientation= test_train_split(test_feature_dfs)
+Test_train_by_orientation= test_train_split(only_axial)
 print(Test_train_by_orientation['axial'].keys())
 
 # ============================================================
