@@ -1,12 +1,12 @@
 import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA,  NMF
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
+from sklearn.decomposition import PCA, NMF
 from sklearn.feature_selection import SelectKBest, mutual_info_classif
-
+# from sklearn.feature_selection import SelectKBest, mutual_info_classif
 def pipeline(Data_Dictionary,lables):
     reports = {
 
@@ -14,7 +14,7 @@ def pipeline(Data_Dictionary,lables):
     for orientation, Data in Data_Dictionary.items():
         pipeline = Pipeline([
             ('scaling', StandardScaler()),
-            ('reduce_dim', PCA(n_components=100)),
+            ('reduce_dim', PCA(n_components=100)), 
             ('classify', DecisionTreeClassifier())
         ])
         TREE_DEPTH_OPTIONS = [5, 10, 20, None]
@@ -46,4 +46,21 @@ def pipeline(Data_Dictionary,lables):
                                 zero_division=0
                             )
 
+    return reports
+
+def hold_out_pipline(features, lables):
+    reports = {
+
+    }
+    for orientation, Data in features.items():
+        pipeline = Pipeline([
+        ('scaling', StandardScaler()),
+        ('reduce_dim', PCA(n_components=100)), 
+        ('classify', DecisionTreeClassifier())
+        ])
+        pipeline.fit_transform(Data['X_train'],Data['y_train'])
+        y_pred = pipeline.predict(Data['X_test'])
+        reports[orientation] = classification_report(Data['y_test'],y_pred,
+                                target_names=lables,
+                                zero_division=0) 
     return reports

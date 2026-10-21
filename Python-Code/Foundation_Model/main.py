@@ -17,6 +17,7 @@ from concat_feature_frames import concat_feature_frames
 from test_with_less_data import test_data
 from pipeline import pipeline
 from test_train_Split_Matlab import test_train_split_matlab
+from pipeline import hold_out_pipline
 # ============================================================
 # 2. PROJECT CONFIGURATION
 # ============================================================
@@ -37,8 +38,8 @@ FEATURE_PATHS = {
     "sagittal": PROJECT_DIR + r"\Features\Sagittal_Features.parquet",
 }
 
-# Set the maximum number of patients per diagnosis for quick testing.
-MAX_PATIENTS_PER_DIAGNOSIS = 15
+# Set the maximum number of patients per diagnosis for "quick" testing.
+MAX_PATIENTS_PER_DIAGNOSIS = 6
 
 # ============================================================
 # 3. LOAD IMAGE METADATA
@@ -55,7 +56,6 @@ image_data = pd.DataFrame(image_data)
 # Relevant information may include patient IDs, filenames,
 # image paths, diagnoses, and orientations.
 image_metadata_df = extracting_meta_data(meta_data_frame=image_data)
-
 
 # ============================================================
 # 4. LOAD DINOv2 FEATURE DATA
@@ -119,11 +119,11 @@ for orientation, feature_df in combined_feature_dfs.items():
     labeled_feature_dfs[orientation] = label_change(feature_df)
 
 
-# print(labeled_feature_dfs.items())
+print(labeled_feature_dfs.items())
 
 
 # ============================================================
-# 7. QUICK TEST: LIMIT THE NUMBER OF PATIENTS
+# 8. QUICK TEST: LIMIT THE NUMBER OF PATIENTS
 # ============================================================
 
 # Reduce the datasets for initial pipeline testing.
@@ -145,7 +145,7 @@ for orientation, feature_df in test_feature_dfs.items():
 
 
 # ============================================================
-# 8. SEPARATE FEATURES, TARGETS, AND PATIENT IDENTIFIERS
+# 9. SEPARATE FEATURES, TARGETS, AND PATIENT IDENTIFIERS
 # ============================================================
 
 # Define metadata columns that must not be used as model input features.
@@ -159,26 +159,55 @@ metadata_columns = [
     "lable",
 ]
 
-Test_Train_Split_Matlab = test_train_split_matlab(feature_dictionary_matlab)
+# Test_Train_Split_Matlab = test_train_split_matlab(feature_dictionary_matlab)
 Test_train_by_orientation= test_train_split(test_feature_dfs)
 print(Test_train_by_orientation['axial'].keys())
 
+# ============================================================
+# 10. Running pipelines for Foundation Model, and Matlab with CV
+# ============================================================
+
 reports = pipeline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+# reports_matlab = pipeline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+
 print(reports['axial'])
 print(reports['coronal'])
 print(reports['sagittal'])
 
-reports_matlab = pipeline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
 
+# ============================================================
+# 11. Running hold-out versions for comparinson
+# ============================================================
+# hold_out_reports_Matlab = hold_out_pipline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+hold_out_reports_Foundation = hold_out_pipline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+
+# ============================================================
+# 12. Saving the Classification repoerts in a Excel File 
+# ============================================================
 with pd.ExcelWriter('FoundationModel.xlsx') as writer:
     for orientation, Data in reports.items():
         pd.DataFrame(Data).to_excel(
             writer,
             sheet_name=f'DINO_{orientation}'
         )
-
+'''
     for orientation, Data in reports_matlab.items():
         pd.DataFrame(Data).to_excel(
             writer,
             sheet_name=f'MATLAB_{orientation}'
         )
+'''
+with pd.ExcelWriter('Hold_Out_Foundation.xlsx') as writer:
+    for orientation, Data in reports.items():
+        pd.DataFrame(Data).to_excel(
+            writer,
+            sheet_name=f'DINO_{orientation}'
+        )
+
+'''
+    for orientation, Data in reports_matlab.items():
+        pd.DataFrame(Data).to_excel(
+            writer,
+            sheet_name=f'DINO_{orientation}'
+        )
+'''

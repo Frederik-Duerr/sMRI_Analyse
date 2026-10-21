@@ -1,6 +1,5 @@
 from sklearn.model_selection import train_test_split
 
-
 def test_train_split(id_diag):
     test_train_values = {}
 
@@ -30,7 +29,7 @@ def test_train_split(id_diag):
             stratify=patient_table['lable']
         )
 
-        # Slices anhand der Patienten-IDs zuordnen
+        # Slices sored based on Patienten-IDs 
         train_mask = patient_ids.isin(train_patients)
         test_mask = patient_ids.isin(test_patients)
 
@@ -45,6 +44,7 @@ def test_train_split(id_diag):
         })
 
     return test_train_values
+
 '''
 def test_train_split(id_diag):
     test_train_values = {
@@ -82,6 +82,7 @@ def test_train_split(id_diag):
         })
     return test_train_values
 '''
+
 # Gathering all the images belonging to the patient id´s of each set.
 def spliting_patient_id_and_images(meta_data_frame, X_train, X_test,X_val):
 
