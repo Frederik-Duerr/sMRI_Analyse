@@ -83,11 +83,22 @@ feature_dictionary_matlab = {
     'Coronal' : coronal,
     'Sagittal' : sagittal
 }
+print(feature_dictionary_matlab['Axial']['Group'].unique()) # [0 1 2 3 4 7 8]
 # Homogenising the Column names
+mapping = {'AD' : 0,
+        'CN' : 1,
+        'EMCI' : 2,
+        'LMCI' : 3,
+        'MCI' : 4,
+        'SMC' : 5}
 for orientation, Data in feature_dictionary_matlab.items():
-    Data.rename(columns={'Target':'lable',
-                         'Group':'diagnosis',
+    Data.rename(columns={'Target':'diagnosis',
+                         'Group':'lable',
                          'PatientID':'patient_id'}, inplace = True)
+    Data['lable'] = Data['diagnosis'].map(mapping)
+
+print(feature_dictionary_matlab['Axial']['lable'].unique())
+
 # ============================================================
 # 6. COMBINE IMAGE METADATA AND DINOv2 FEATURES
 # ============================================================
@@ -103,6 +114,7 @@ for orientation, feature_df in orientation_feature_dfs.items():
         feature_df,
         orientation,
     )
+
 
 # Inspect the columns of the combined axial feature DataFrame.
 print(combined_feature_dfs["axial"].columns)
@@ -133,8 +145,12 @@ print(labeled_feature_dfs.items())
 
 test_feature_dfs = test_data( 
     labeled_feature_dfs,
-    MAX_PATIENTS_PER_DIAGNOSIS,
+    MAX_PATIENTS_PER_DIAGNOSIS
 )
+# Selecting patients for the matlab Data
+selected_ids = {}
+test_feature_dfs_matlab = test_data(feature_dictionary_matlab,MAX_PATIENTS_PER_DIAGNOSIS)
+
 
 # Inspect the resulting datasets.
 for orientation, feature_df in test_feature_dfs.items():
@@ -144,6 +160,14 @@ for orientation, feature_df in test_feature_dfs.items():
     print("Diagnostic label counts:")
     print(feature_df["lable"].value_counts())
 
+
+# Inspect the resulting datasets.
+for orientation, feature_df in test_feature_dfs_matlab.items():
+    print(f"\nOrientation: {orientation}")
+    print(f"Number of rows: {len(feature_df)}")
+    print(f"Number of patients: {feature_df['patient_id'].nunique()}")
+    print("Diagnostic label counts:")
+    print(feature_df["lable"].value_counts())
 
 # ============================================================
 # 9. SEPARATE FEATURES, TARGETS, AND PATIENT IDENTIFIERS
@@ -164,7 +188,7 @@ del only_axial['sagittal']
 del only_axial['coronal']
 print(type(only_axial))
 print(only_axial['axial'])
-# Test_Train_Split_Matlab = test_train_split_matlab(feature_dictionary_matlab)
+Test_Train_Split_Matlab = test_train_split_matlab(feature_dictionary_matlab)
 Test_train_by_orientation= test_train_split(only_axial)
 print(Test_train_by_orientation['axial'].keys())
 
@@ -173,7 +197,7 @@ print(Test_train_by_orientation['axial'].keys())
 # ============================================================
 
 reports = pipeline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable'].unique().astype(str))
-# reports_matlab = pipeline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+reports_matlab = pipeline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
 
 print(reports['axial'])
 print(reports['coronal'])
@@ -183,7 +207,7 @@ print(reports['sagittal'])
 # ============================================================
 # 11. Running hold-out versions for comparinson
 # ============================================================
-# hold_out_reports_Matlab = hold_out_pipline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+hold_out_reports_Matlab = hold_out_pipline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
 hold_out_reports_Foundation = hold_out_pipline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable'].unique().astype(str))
 
 # ============================================================
@@ -195,13 +219,13 @@ with pd.ExcelWriter('FoundationModel.xlsx') as writer:
             writer,
             sheet_name=f'DINO_{orientation}'
         )
-'''
+
     for orientation, Data in reports_matlab.items():
         pd.DataFrame(Data).to_excel(
             writer,
             sheet_name=f'MATLAB_{orientation}'
         )
-'''
+
 with pd.ExcelWriter('Hold_Out_Foundation.xlsx') as writer:
     for orientation, Data in reports.items():
         pd.DataFrame(Data).to_excel(
@@ -209,10 +233,9 @@ with pd.ExcelWriter('Hold_Out_Foundation.xlsx') as writer:
             sheet_name=f'DINO_{orientation}'
         )
 
-'''
+
     for orientation, Data in reports_matlab.items():
         pd.DataFrame(Data).to_excel(
             writer,
             sheet_name=f'DINO_{orientation}'
         )
-'''

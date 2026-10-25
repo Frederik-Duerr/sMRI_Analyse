@@ -6,7 +6,6 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
 from sklearn.decomposition import PCA, NMF
 from sklearn.feature_selection import SelectKBest, mutual_info_classif
-# from sklearn.feature_selection import SelectKBest, mutual_info_classif
 def pipeline(Data_Dictionary,lables):
     reports = {
 
