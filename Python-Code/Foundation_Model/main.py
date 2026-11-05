@@ -4,7 +4,7 @@
 
 # External libraries
 import pandas as pd
-
+from sklearn.metrics import classification_report
 # Project-specific functions
 from Loading_data import (
     read_folders,
@@ -18,6 +18,8 @@ from test_with_less_data import test_data
 from pipeline import pipeline
 from test_train_Split_Matlab import test_train_split_matlab
 from pipeline import hold_out_pipline
+from Statisticle_Visualisations import confucion_matrix
+from pipeline import aggregation_of_results
 # ============================================================
 # 2. PROJECT CONFIGURATION
 # ============================================================
@@ -39,7 +41,7 @@ FEATURE_PATHS = {
 }
 
 # Set the maximum number of patients per diagnosis for "quick" testing.
-MAX_PATIENTS_PER_DIAGNOSIS = 6
+MAX_PATIENTS_PER_DIAGNOSIS = 20
 
 # ============================================================
 # 3. LOAD IMAGE METADATA
@@ -57,6 +59,8 @@ image_data = pd.DataFrame(image_data)
 # image paths, diagnoses, and orientations.
 image_metadata_df = extracting_meta_data(meta_data_frame=image_data)
 
+
+
 # ============================================================
 # 4. LOAD DINOv2 FEATURE DATA
 # ============================================================
@@ -69,6 +73,7 @@ for orientation, feature_path in FEATURE_PATHS.items():
     orientation_feature_dfs[orientation] = reading_in_orientations(
         feature_path
     )
+
 
 # ============================================================
 # 5. LOAD Matlab extracted Features
@@ -83,7 +88,7 @@ feature_dictionary_matlab = {
     'Coronal' : coronal,
     'Sagittal' : sagittal
 }
-print(feature_dictionary_matlab['Axial']['Group'].unique()) # [0 1 2 3 4 7 8]
+# print(feature_dictionary_matlab['Axial']['Group'].unique()) # [0 1 2 3 4 7 8]
 # Homogenising the Column names
 mapping = {'AD' : 0,
         'CN' : 1,
@@ -97,7 +102,7 @@ for orientation, Data in feature_dictionary_matlab.items():
                          'PatientID':'patient_id'}, inplace = True)
     Data['lable'] = Data['diagnosis'].map(mapping)
 
-print(feature_dictionary_matlab['Axial']['lable'].unique())
+# print(feature_dictionary_matlab['Axial']['lable'].unique())
 
 # ============================================================
 # 6. COMBINE IMAGE METADATA AND DINOv2 FEATURES
@@ -117,7 +122,7 @@ for orientation, feature_df in orientation_feature_dfs.items():
 
 
 # Inspect the columns of the combined axial feature DataFrame.
-print(combined_feature_dfs["axial"].columns)
+# print(combined_feature_dfs["axial"].columns)
 
 
 # ============================================================
@@ -132,9 +137,24 @@ for orientation, feature_df in combined_feature_dfs.items():
     labeled_feature_dfs[orientation] = label_change(feature_df)
 
 
-print(labeled_feature_dfs.items())
+# print(labeled_feature_dfs.items())
 
+'''
+EXCEL_PATH = os.path.join(
+    PROJECT_DIR, 'Concated_labled_DINO.xlsx'
+)
 
+with pd.ExcelWriter(EXCEL_PATH) as writer:
+    for orientation, Data in labeled_feature_dfs.items():
+        Data.to_excel(
+            writer,
+            sheet_name=orientation,
+            index=False
+        )
+
+print(f'File saved to: {EXCEL_PATH}')
+
+'''
 # ============================================================
 # 8. QUICK TEST: LIMIT THE NUMBER OF PATIENTS
 # ============================================================
@@ -147,11 +167,10 @@ test_feature_dfs = test_data(
     labeled_feature_dfs,
     MAX_PATIENTS_PER_DIAGNOSIS
 )
-# Selecting patients for the matlab Data
-selected_ids = {}
+
 test_feature_dfs_matlab = test_data(feature_dictionary_matlab,MAX_PATIENTS_PER_DIAGNOSIS)
 
-
+'''
 # Inspect the resulting datasets.
 for orientation, feature_df in test_feature_dfs.items():
     print(f"\nOrientation: {orientation}")
@@ -168,7 +187,7 @@ for orientation, feature_df in test_feature_dfs_matlab.items():
     print(f"Number of patients: {feature_df['patient_id'].nunique()}")
     print("Diagnostic label counts:")
     print(feature_df["lable"].value_counts())
-
+'''
 # ============================================================
 # 9. SEPARATE FEATURES, TARGETS, AND PATIENT IDENTIFIERS
 # ============================================================
@@ -183,59 +202,74 @@ metadata_columns = [
     "image_path",
     "lable",
 ]
-only_axial = test_feature_dfs.copy()
-del only_axial['sagittal']
-del only_axial['coronal']
-print(type(only_axial))
-print(only_axial['axial'])
-Test_Train_Split_Matlab = test_train_split_matlab(feature_dictionary_matlab)
-Test_train_by_orientation= test_train_split(only_axial)
-print(Test_train_by_orientation['axial'].keys())
+
+#Test_Train_Split_Matlab = test_train_split_matlab(test_feature_dfs_matlab)
+Test_train_by_orientation= test_train_split(test_feature_dfs)
+
+
+for orientation, Data in Test_train_by_orientation.items():
+    train_ids = set(Data['patient_ids_train'])
+    test_ids = set(Data['patient_ids_test'])
+
+    overlap = train_ids.intersection(test_ids)
+
+    print(f"\n{orientation}")
+    print("Train patients:", len(train_ids))
+    print("Test patients:", len(test_ids))
+    print("Overlapping patients:", len(overlap))
 
 # ============================================================
 # 10. Running pipelines for Foundation Model, and Matlab with CV
 # ============================================================
 
-reports = pipeline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable'].unique().astype(str))
-reports_matlab = pipeline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+reports,cv_reports,test_predictions = pipeline(Test_train_by_orientation)
+# reports_matlab, cv_reports_matlab,test_predictions_matlab = pipeline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+# print(reports_matlab.items())
 
-print(reports['axial'])
-print(reports['coronal'])
-print(reports['sagittal'])
+for orientation, results in cv_reports.items():
+    print(f"\n{orientation}")
+    print(f"CV Accuracy: {results['accuracy_mean']:.4f} "
+          f"+/- {results['accuracy_std']:.4f}")
+    print(f"CV F1 Macro: {results['f1_macro_mean']:.4f} "
+          f"+/- {results['f1_macro_std']:.4f}")
+print(f'Axial: \n {reports['axial']}')
+print(f'Coronal: \n {reports['coronal']}')
+print(f'Sagittal: \n {reports['sagittal']}')
 
+results = aggregation_of_results(test_predictions)
 
+for orientation, values in results.items():
+
+    print(f"\n{orientation}")
+
+    y_true = values['True patient Diagnosis'].astype(int)
+    y_pred = values['Predicted diagnosis'].astype(int)
+
+    print(classification_report(
+        y_true,
+        y_pred,
+        labels=[0, 1, 2, 3, 4, 5],
+        zero_division=0
+    ))
+    
+'''
+for orientation, results in cv_reports_matlab.items():
+    print(f"\n{orientation}")
+    print(f"CV Accuracy: {results['accuracy_mean']:.4f} "
+          f"+/- {results['accuracy_std']:.4f}")
+    print(f"CV F1 Macro: {results['f1_macro_mean']:.4f} "
+          f"+/- {results['f1_macro_std']:.4f}")
+print(f'Axial: \n {reports_matlab['Axial']}')
+print(f'Coronal: \n {reports_matlab['Coronal']}')
+print(f'Sagittal: \n {reports_matlab['Sagittal']}')
+'''
+confucion_matrix(results)
+#confucion_matrix(test_predictions_matlab)
+
+'''
 # ============================================================
 # 11. Running hold-out versions for comparinson
 # ============================================================
-hold_out_reports_Matlab = hold_out_pipline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
-hold_out_reports_Foundation = hold_out_pipline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable'].unique().astype(str))
-
-# ============================================================
-# 12. Saving the Classification repoerts in a Excel File 
-# ============================================================
-with pd.ExcelWriter('FoundationModel.xlsx') as writer:
-    for orientation, Data in reports.items():
-        pd.DataFrame(Data).to_excel(
-            writer,
-            sheet_name=f'DINO_{orientation}'
-        )
-
-    for orientation, Data in reports_matlab.items():
-        pd.DataFrame(Data).to_excel(
-            writer,
-            sheet_name=f'MATLAB_{orientation}'
-        )
-
-with pd.ExcelWriter('Hold_Out_Foundation.xlsx') as writer:
-    for orientation, Data in reports.items():
-        pd.DataFrame(Data).to_excel(
-            writer,
-            sheet_name=f'DINO_{orientation}'
-        )
-
-
-    for orientation, Data in reports_matlab.items():
-        pd.DataFrame(Data).to_excel(
-            writer,
-            sheet_name=f'DINO_{orientation}'
-        )
+# hold_out_reports_Matlab = hold_out_pipline(Test_Train_Split_Matlab,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+#hold_out_reports_Foundation = hold_out_pipline(Test_train_by_orientation,labeled_feature_dfs['axial']['lable'].unique().astype(str))
+'''

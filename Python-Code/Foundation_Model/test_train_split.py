@@ -38,7 +38,7 @@ def test_train_split(id_diag):
             'X_test': X.loc[test_mask],
             'y_train': y.loc[train_mask],
             'y_test': y.loc[test_mask],
-            'groups_train': groups.loc[train_mask],
+            'groups_train': patient_ids.loc[train_mask],
             'patient_ids_train': patient_ids.loc[train_mask],
             'patient_ids_test': patient_ids.loc[test_mask]
         })

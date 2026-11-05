@@ -26,7 +26,7 @@ def test_data(dictionary_with_all_three_orientationen, number_of_patients):
             random_state=45
         )
 
-    selected_patients.extend(selected.tolist())
+        selected_patients.extend(selected.tolist())
 
     # Apply the same patient selection to all orientations
     patient_id_Diagnosis = {}
