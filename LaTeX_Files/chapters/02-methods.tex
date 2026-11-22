@@ -54,8 +54,28 @@ resampling, denoising, bias-field correction, or other preprocessing steps as ap
 
 \section{Feature Extraction}
 \label{sec:features}
-Feature extraction was performed within two different approaches. The first one 
+Feature extraction was performed within two different approaches. The first one was performed by Jose Menzes using MATLAB. He performed DWT on the images and 
+extracted based on that features, which he later combined into six statistical values to reduce the dimension of the Dataset. This approch in the baseline of this reasearch. 
+The second type of feature extraction was the DINOv2 foundation model. 
 \placeholder{Describe the features, extraction method, software, and parameters.}
+\subsection{State of the are MATLAB extraction}
+\label{subsec: MATLAB}
+\subsection{Foundation model DINOv2}
+\label{DINO}
+DINOv2 is an advanced self-superviced learning technique, released 2023 by MetaAI. This foundation model is particular powerful in the fields of computer vision. 
+It has a high accuracy in identifying including objects within iamges and video frames.
+The model extracts the features directly from the images, and does not rely on text descriptions.
+The architecture of the model is decided into 2 levels. 
+The first level is the Image-level objective. 
+The initial DINO architecture, consists of a student-teacher networks, that includes a larger network, the teacher, and smaller network, the student. 
+Both of the network crop parts of the image, and feed that to the feature encoder. The feature encoder, will produce
+embeddings, which will be further used. The student network is build by training on the embeddings. 
+and the Teacher network is build by taking advantage of the weights of different student models.
+The second level design is the pacth-level design. The vision trasformer devides the image into 4x4 batches, unrolls the array and
+randomly masks the some of the input patches, that student network trains on. Principal component analysis (PCAs) are computed for patch features extracted by the network. 
+  
+
+
 
 \section{Machine Learning / Deep Learning}
 \label{sec:models}

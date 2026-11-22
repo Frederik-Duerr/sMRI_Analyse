@@ -1,0 +1,209 @@
+axial
+Train patients: 102
+Test patients: 18
+Overlapping patients: 0
+
+coronal
+Train patients: 102
+Test patients: 18
+Overlapping patients: 0
+
+sagittal
+Train patients: 102
+Test patients: 18
+Overlapping patients: 0
+
+axial
+Fitting 5 folds for each of 2 candidates, totalling 10 fits
+Best parameters: {'classify__class_weight': 'balanced_subsample', 'classify__max_features': 0.1, 'classify__max_samples': None, 'classify__min_samples_leaf': 4, 'classify__min_samples_split': 2, 'classify__n_estimators': 200}
+Best CV F1: 0.26175532383920086
+
+coronal
+Fitting 5 folds for each of 2 candidates, totalling 10 fits
+Best parameters: {'classify__class_weight': 'balanced_subsample', 'classify__max_features': 0.1, 'classify__max_samples': None, 'classify__min_samples_leaf': 4, 'classify__min_samples_split': 2, 'classify__n_estimators': 200}
+Best CV F1: 0.27242547271763107
+
+sagittal
+Fitting 5 folds for each of 2 candidates, totalling 10 fits
+Best parameters: {'classify__class_weight': 'balanced_subsample', 'classify__max_features': 0.1, 'classify__max_samples': None, 'classify__min_samples_leaf': 4, 'classify__min_samples_split': 2, 'classify__n_estimators': 200}
+Best CV F1: 0.279262084162109
+
+axial
+Train Features: (102, 384)
+Train Labels: (102,)
+Test Features: (18, 384)
+Test Labels: (18,)
+Fitting 5 folds for each of 2 candidates, totalling 10 fits
+Best parameters: {'classify__class_weight': 'balanced_subsample', 'classify__max_features': 0.1, 'classify__max_samples': None, 'classify__min_samples_leaf': 4, 'classify__min_samples_split': 2, 'classify__n_estimators': 200}
+Best CV F1: 0.36629629629629623
+
+coronal
+Train Features: (102, 384)
+Train Labels: (102,)
+Test Features: (18, 384)
+Test Labels: (18,)
+Fitting 5 folds for each of 2 candidates, totalling 10 fits
+Best parameters: {'classify__class_weight': 'balanced_subsample', 'classify__max_features': 0.05, 'classify__max_samples': None, 'classify__min_samples_leaf': 4, 'classify__min_samples_split': 2, 'classify__n_estimators': 200}
+Best CV F1: 0.42642857142857143
+
+sagittal
+Train Features: (102, 384)
+Train Labels: (102,)
+Test Features: (18, 384)
+Test Labels: (18,)
+Fitting 5 folds for each of 2 candidates, totalling 10 fits
+Best parameters: {'classify__class_weight': 'balanced_subsample', 'classify__max_features': 0.1, 'classify__max_samples': None, 'classify__min_samples_leaf': 4, 'classify__min_samples_split': 2, 'classify__n_estimators': 200}
+Best CV F1: 0.36968253968253967
+
+axial
+CV Accuracy: 0.2708 +/- 0.0238
+CV F1 Macro: 0.2618 +/- 0.0248
+
+coronal
+CV Accuracy: 0.2860 +/- 0.0182
+CV F1 Macro: 0.2724 +/- 0.0152
+
+sagittal
+CV Accuracy: 0.2818 +/- 0.0324
+CV F1 Macro: 0.2793 +/- 0.0319
+
+Axial: 
+               precision    recall  f1-score   support
+
+           0       0.40      0.54      0.46       567
+           1       0.39      0.24      0.30       567
+           2       0.25      0.47      0.33       567
+           3       0.36      0.24      0.29       567
+           4       0.28      0.18      0.22       567
+           5       0.28      0.24      0.26       567
+
+    accuracy                           0.32      3402
+   macro avg       0.33      0.32      0.31      3402
+weighted avg       0.33      0.32      0.31      3402
+
+Coronal: 
+               precision    recall  f1-score   support
+
+           0       0.36      0.46      0.41       699
+           1       0.28      0.17      0.21       699
+           2       0.36      0.34      0.35       699
+           3       0.21      0.40      0.28       699
+           4       0.20      0.10      0.13       699
+           5       0.27      0.21      0.24       699
+
+    accuracy                           0.28      4194
+   macro avg       0.28      0.28      0.27      4194
+weighted avg       0.28      0.28      0.27      4194
+
+Sagittal: 
+               precision    recall  f1-score   support
+
+           0       0.42      0.48      0.45       591
+           1       0.35      0.17      0.23       591
+           2       0.49      0.41      0.45       591
+           3       0.30      0.16      0.21       591
+           4       0.20      0.44      0.28       591
+           5       0.34      0.28      0.31       591
+
+    accuracy                           0.32      3546
+   macro avg       0.35      0.32      0.32      3546
+weighted avg       0.35      0.32      0.32      3546
+
+
+axial
+CV Accuracy: 0.4024 +/- 0.0393
+CV F1 Macro: 0.3663 +/- 0.0571
+
+coronal
+CV Accuracy: 0.4614 +/- 0.1059
+CV F1 Macro: 0.4264 +/- 0.0995
+
+sagittal
+CV Accuracy: 0.3833 +/- 0.1285
+CV F1 Macro: 0.3697 +/- 0.1218
+Axial:
+              precision    recall  f1-score   support
+
+           0       0.50      0.67      0.57         3
+           1       0.67      0.67      0.67         3
+           2       1.00      0.67      0.80         3
+           3       0.40      0.67      0.50         3
+           4       0.00      0.00      0.00         3
+           5       0.50      0.33      0.40         3
+
+    accuracy                           0.50        18
+   macro avg       0.51      0.50      0.49        18
+weighted avg       0.51      0.50      0.49        18
+
+Coronal:
+              precision    recall  f1-score   support
+
+           0       0.50      0.67      0.57         3
+           1       0.50      0.67      0.57         3
+           2       0.67      0.67      0.67         3
+           3       0.50      0.67      0.57         3
+           4       0.50      0.33      0.40         3
+           5       0.00      0.00      0.00         3
+
+    accuracy                           0.50        18
+   macro avg       0.44      0.50      0.46        18
+weighted avg       0.44      0.50      0.46        18
+
+Sagittal:
+              precision    recall  f1-score   support
+
+           0       0.50      0.67      0.57         3
+           1       0.00      0.00      0.00         3
+           2       0.40      0.67      0.50         3
+           3       1.00      0.33      0.50         3
+           4       0.33      0.33      0.33         3
+           5       0.40      0.67      0.50         3
+
+    accuracy                           0.44        18
+   macro avg       0.44      0.44      0.40        18
+weighted avg       0.44      0.44      0.40        18
+
+
+axial
+              precision    recall  f1-score   support
+
+           0       0.40      0.67      0.50         3
+           1       0.67      0.67      0.67         3
+           2       1.00      1.00      1.00         3
+           3       0.67      0.67      0.67         3
+           4       0.00      0.00      0.00         3
+           5       0.50      0.33      0.40         3
+
+    accuracy                           0.56        18
+   macro avg       0.54      0.56      0.54        18
+weighted avg       0.54      0.56      0.54        18
+
+
+coronal
+              precision    recall  f1-score   support
+
+           0       0.40      0.67      0.50         3
+           1       0.50      0.33      0.40         3
+           2       0.43      1.00      0.60         3
+           3       1.00      0.33      0.50         3
+           4       1.00      0.33      0.50         3
+           5       0.50      0.33      0.40         3
+
+    accuracy                           0.50        18
+   macro avg       0.64      0.50      0.48        18
+weighted avg       0.64      0.50      0.48        18
+
+
+sagittal
+              precision    recall  f1-score   support
+
+           0       0.40      0.67      0.50         3
+           1       1.00      0.33      0.50         3
+           2       0.75      1.00      0.86         3
+           3       0.00      0.00      0.00         3
+           4       0.33      0.33      0.33         3
+           5       0.40      0.67      0.50         3
+
+    accuracy                           0.50        18
+   macro avg       0.48      0.50      0.45        18
+weighted avg       0.48      0.50      0.45        18
