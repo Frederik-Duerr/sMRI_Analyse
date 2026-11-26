@@ -449,11 +449,16 @@ def aggregation_of_results(test_predictions):
 
         true_patinet_diagnosis = results.groupby("patient_id")["true_lables"].first()
         predicted_diagnosis = Grouped_id_prob.idxmax(axis=1)
+
+        predicted_diagnosis = predicted_diagnosis.astype(
+            true_patinet_diagnosis.dtype
+        )
         results_dict[orinetation] = {
             "Probabilities": Grouped_id_prob,
             "True patient Diagnosis": true_patinet_diagnosis,
             "Predicted diagnosis": predicted_diagnosis,
         }
+    return results_dict
 
 
 def hold_out_pipline(features, lables):

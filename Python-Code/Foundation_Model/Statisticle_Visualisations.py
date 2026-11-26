@@ -71,7 +71,7 @@ def confucion_Matrix(test_predictions, level, model):
         ax2.set_ylabel('Actual')
 
         plt.tight_layout()
-        plt.savefig(f'{name}_{model_}.png',dpi=300,bbox_inches = 'tight')
+        #plt.savefig(f'{name}_{model_}.png',dpi=300,bbox_inches = 'tight')
         plt.show()
         plt.close(f)
         

@@ -38,11 +38,11 @@ from MultiinstanceLearning import MRIDataset,AttentionAggregation,MLPClassifiere
 
 # Define the root directory of the Project
 PROJECT_DIR = (
- r'C:\Users\Johan\Desktop\Privat\Portugal\UCP\Semester 3\Biomedical Project\MRI Project'
+ r'C:\Users\Admin\Desktop\Master_UCP\Semester3\Biomedical_Project'
 )
 
 # Define the directory containing the preprocessed MRI images.
-PREPROCESSED_DIR = PROJECT_DIR + r"\Pre_processed"
+PREPROCESSED_DIR = PROJECT_DIR + r"\AD_Pre_processed\Pre_processed"
 from pathlib import Path
 
 root = Path(PREPROCESSED_DIR)
@@ -53,6 +53,8 @@ print("PREPROCESSED_DIR:", root.resolve())
 print("Directory exists:", root.exists())
 
 print("\nContents of PREPROCESSED_DIR:")
+
+
 
 for folder in root.iterdir():
     print(folder.name)
@@ -261,6 +263,7 @@ for orientation, feature_df in orientation_feature_dfs.items():
             ['count', 'min', 'max', 'mean']
         )
     )
+
 '''
 # ============================================================
 # 5. LOAD Matlab extracted Features
@@ -346,7 +349,6 @@ for orientation, feature_df in combined_feature_dfs.items():
 
 
 # print(labeled_feature_dfs.items())
-
 '''
 EXCEL_PATH = os.path.join(
     PROJECT_DIR, 'Concated_labled_DINO.xlsx'
@@ -442,7 +444,7 @@ for orientation, Data in Test_train_by_orientation.items():
 
 
 
-'''
+
 # ============================================================
 # 10. Running pipelines for Foundation Model, and Matlab with CV
 # ============================================================
@@ -457,12 +459,15 @@ results_patient  ={
 results_independed ={
     
 }
+results_prediction_patient = {
+    
+}
 for model in models: 
     print(f'\n Processing {model}')
     results_independed[model] = sclice_independed(Test_train_by_orientation,model)
     results_sclice[model] = pipeline_sclice_level(Test_train_by_orientation,model)
+    results_prediction_patient[model] = aggregation_of_results(results_sclice[model][2])
     results_patient[model] = patient_pipeline(Test_train_by_orientation,model)
-
 
 for model in models:
     confucion_Matrix(results_independed[model][2],'Independed',model)
@@ -470,7 +475,19 @@ for model in models:
     confucion_Matrix(results_patient[model][2], 'Patient', model )
 
 
-'''
+for model in models:
+
+    for orientation, values in results_prediction_patient[model].items():
+
+        print(f"\n{model} - {orientation}")
+
+        print(
+            classification_report(
+                values["True patient Diagnosis"],
+                values["Predicted diagnosis"],
+                zero_division=0
+            )
+        )
 # ============================================================
 # 11. Running hold-out versions for comparinson
 # ============================================================
